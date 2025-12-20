@@ -27,7 +27,7 @@
 
   <!-- NuGet 包公共元数据 -->
   <PropertyGroup>
-    <Version>0.0.1-beta2</Version>
+    <Version>0.0.1-beta3</Version>
     <Authors>Apq</Authors>
     <Company>Apq</Company>
     <Copyright>Copyright © Apq $([System.DateTime]::Now.Year)</Copyright>
