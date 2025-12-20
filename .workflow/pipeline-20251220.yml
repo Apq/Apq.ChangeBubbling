@@ -18,7 +18,7 @@ stages:
         name: execute_by_docker
         displayName: 基于镜像的脚本执行
         certificate: ''
-        image: amwpfiqvy/publish-to-nuget
+        image: registry.cn-chengdu.aliyuncs.com/apq/publish-to-nuget
         command:
           - '# 请在此输入您想执行的脚本'
           - echo 'Hello Gitee!'
