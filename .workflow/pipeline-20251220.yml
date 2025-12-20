@@ -20,8 +20,7 @@ stages:
         certificate: ''
         image: registry.cn-chengdu.aliyuncs.com/apq/publish-to-nuget
         command:
-          - '# 请在此输入您想执行的脚本'
-          - echo 'Hello Gitee!'
+          - ''
         notify: []
         strategy:
           retry: '0'
