@@ -7,6 +7,9 @@ triggers:
     tags:
       include:
         - ^v\d+\.\d+\.\d+(-[\w.]+)?$
+variables:
+  global:
+    - NUGET_API_KEY
 stages:
   - name: stage-1549ccd4
     displayName: 打包并发布
