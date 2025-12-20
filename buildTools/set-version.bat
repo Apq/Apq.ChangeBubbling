@@ -17,4 +17,3 @@ if "%~1"=="" (
         powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%set-version.ps1" -Version "%~1" -Suffix "%~2"
     )
 )
-

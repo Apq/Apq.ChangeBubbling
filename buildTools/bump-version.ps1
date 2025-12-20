@@ -7,7 +7,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PropsFile = Join-Path $ScriptDir 'Directory.Build.props'
+$ProjectRoot = Split-Path -Parent $ScriptDir
+$PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
 $SetVersionScript = Join-Path $ScriptDir 'set-version.ps1'
 
 function Write-ColorText {

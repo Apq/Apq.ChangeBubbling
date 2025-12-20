@@ -6,8 +6,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PropsFile = Join-Path $ScriptDir 'Directory.Build.props'
-$DefaultOutputDir = Join-Path $ScriptDir 'nupkgs'
+$ProjectRoot = Split-Path -Parent $ScriptDir
+$PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
+$DefaultOutputDir = Join-Path $ProjectRoot 'nupkgs'
 
 function Write-ColorText {
     param([string]$Text, [string]$Color = 'White')
@@ -86,7 +87,7 @@ Write-ColorText '开始打包...' 'Cyan'
 Write-Host ''
 
 # 构建打包参数 - 只打包主项目
-$ProjectPath = Join-Path $ScriptDir 'Apq.ChangeBubbling\Apq.ChangeBubbling.csproj'
+$ProjectPath = Join-Path $ProjectRoot 'Apq.ChangeBubbling\Apq.ChangeBubbling.csproj'
 $packArgs = @(
     'pack'
     $ProjectPath

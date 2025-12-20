@@ -6,7 +6,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PropsFile = Join-Path $ScriptDir 'Directory.Build.props'
+$ProjectRoot = Split-Path -Parent $ScriptDir
+$PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
 
 function Write-ColorText {
     param([string]$Text, [string]$Color = 'White')
@@ -149,12 +150,8 @@ try {
 
     # 询问是否生成新版本包
     $doPack = Read-Confirm '是否生成新版本包? (Y/n，默认为 Y): ' $true
-    $doPush = $false
 
     if ($doPack) {
-        # 立即询问是否发布
-        $doPush = Read-Confirm '生成成功后是否发布到 NuGet? (Y/n，默认为 Y): ' $true
-
         Write-Host ''
         Write-ColorText '开始生成新版本包...' 'Cyan'
         Write-Host ''
@@ -162,15 +159,19 @@ try {
         $PackScript = Join-Path $ScriptDir 'pack-release.ps1'
         & $PackScript
 
-        if ($LASTEXITCODE -eq 0 -and $doPush) {
+        if ($LASTEXITCODE -eq 0) {
             Write-Host ''
-            $PushScript = Join-Path $ScriptDir 'push-nuget.ps1'
-            & $PushScript -SkipConfirm
+            Write-ColorText '下一步操作:' 'Yellow'
+            Write-ColorText '  推送 tag 触发自动发布: git tag v' -NoNewline 'Gray'
+            Write-ColorText $fullVersion -NoNewline 'White'
+            Write-ColorText ' && git push origin v' -NoNewline 'Gray'
+            Write-ColorText $fullVersion 'White'
+            Write-Host ''
         }
     } else {
         Write-ColorText '下一步操作:' 'Yellow'
         Write-ColorText '  1. 运行 pack-release.bat 生成新版本包' 'Gray'
-        Write-ColorText '  2. 运行 push-nuget.bat 发布到 NuGet' 'Gray'
+        Write-ColorText '  2. 推送 tag 触发自动发布' 'Gray'
         Write-Host ''
     }
 } catch {

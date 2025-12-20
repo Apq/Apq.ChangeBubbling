@@ -8,9 +8,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PropsFile = Join-Path $ScriptDir 'Directory.Build.props'
-$DefaultPackageDir = Join-Path $ScriptDir 'nupkgs'
-$ApiKeyFile = Join-Path $ScriptDir 'NuGet_Apq_Key.txt'
+$ProjectRoot = Split-Path -Parent $ScriptDir
+$PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
+$DefaultPackageDir = Join-Path $ProjectRoot 'nupkgs'
+$ApiKeyFile = Join-Path $ProjectRoot 'NuGet_Apq_Key.txt'
 
 function Write-ColorText {
     param([string]$Text, [string]$Color = 'White')

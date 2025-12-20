@@ -17,4 +17,3 @@ if "%~1"=="" (
         powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%bump-version.ps1" -Part "%~1" -Suffix "%~2"
     )
 )
-

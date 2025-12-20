@@ -17,4 +17,3 @@ if "%~1"=="" (
         powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%pack-release.ps1" -OutputDir "%~1"
     )
 )
-
