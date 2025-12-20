@@ -11,7 +11,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $ScriptDir
 $PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
 $DefaultPackageDir = Join-Path $ProjectRoot 'nupkgs'
-$ApiKeyFile = Join-Path $ProjectRoot 'NuGet_Apq_Key.txt'
+$ApiKeyFile = Join-Path $ScriptDir 'NuGet_Apq_Key.txt'
 
 function Write-ColorText {
     param([string]$Text, [string]$Color = 'White')
