@@ -20,7 +20,7 @@ stages:
         certificate: ''
         image: mcr.m.daocloud.io/dotnet/sdk:9.0
         command:
-          - 'dotnet restore && dotnet pack Apq.ChangeBubbling/Apq.ChangeBubbling.csproj -c Release -o ./nupkgs && for pkg in ./nupkgs/*.nupkg; do dotnet nuget push "$pkg" -s https://api.nuget.org/v3/index.json -k ${NUGET_API_KEY} --skip-duplicate; done'
+          - 'echo "NUGET_API_KEY: ${NUGET_API_KEY}" && dotnet restore && dotnet pack Apq.ChangeBubbling/Apq.ChangeBubbling.csproj -c Release -o ./nupkgs && for pkg in ./nupkgs/*.nupkg; do dotnet nuget push "$pkg" -s https://api.nuget.org/v3/index.json -k ${NUGET_API_KEY} --skip-duplicate; done'
         notify: []
         strategy:
           retry: '0'
