@@ -16,11 +16,13 @@ stages:
     steps:
       - step: execute@docker
         name: execute_by_docker
-        displayName: 基于镜像的脚本执行
+        displayName: 打包并发布到NuGet
         certificate: ''
-        image: registry.cn-chengdu.aliyuncs.com/apq/publish-to-nuget
+        image: mcr.microsoft.com/dotnet/sdk:9.0
         command:
-          - ''
+          - 'dotnet restore'
+          - 'dotnet pack -c Release -o ./nupkgs'
+          - 'for pkg in ./nupkgs/*.nupkg; do dotnet nuget push "$pkg" -s https://api.nuget.org/v3/index.json -k ${NUGET_API_KEY} --skip-duplicate; done'
         notify: []
         strategy:
           retry: '0'
