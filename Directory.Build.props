@@ -1,0 +1,28 @@
+<Project>
+  <!-- 继承上级 Directory.Build.props -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!-- Apq.ChangeBubbling 特定的 NuGet 包元数据 -->
+  <PropertyGroup>
+    <Description>变更冒泡事件库，支持 Rx 响应式流、弱引用消息和可插拔调度环境</Description>
+    <PackageTags>change-bubbling;reactive;rx;mvvm;messaging;event;observable</PackageTags>
+  </PropertyGroup>
+
+  <!-- NuGet 包公共元数据 -->
+  <PropertyGroup>
+    <Version>0.0.1-beta2</Version>
+    <Authors>Apq</Authors>
+    <Company>Apq</Company>
+    <Copyright>Copyright © Apq $([System.DateTime]::Now.Year)</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- 启用包生成 -->
+    <IsPackable>true</IsPackable>
+
+    <!-- 源码链接支持 -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>

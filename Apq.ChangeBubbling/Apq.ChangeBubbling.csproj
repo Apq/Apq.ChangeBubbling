@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- 继承 Directory.Build.props 的 TargetFrameworks、LangVersion 等公共设置 -->
+        <NoWarn>$(NoWarn);CS0067</NoWarn>
+        <PathMap>$(MSBuildProjectDirectory)\=/_/Apq.ChangeBubbling/</PathMap>
+
+        <!-- NuGet 包 README -->
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <!-- 将 README.md 包含到 NuGet 包中 -->
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- PolySharp 用于在旧版本 .NET 上支持新语言特性 -->
+        <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
+
+        <!-- Rx 响应式编程 -->
+        <PackageReference Include="System.Reactive" Version="6.1.0" />
+
+        <!-- Dataflow 背压管线 -->
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="8.0.1" Condition="'$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net8.0'" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="9.0.0" Condition="'$(TargetFramework)' == 'net9.0'" />
+
+        <!-- CommunityToolkit.Mvvm 弱引用消息 -->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+
+        <!-- Castle.Core 动态代理 -->
+        <PackageReference Include="Castle.Core" Version="5.2.1" />
+
+        <!-- Nito.AsyncEx 异步上下文 -->
+        <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+
+        <!-- Fody 与 PropertyChanged.Fody 用于自动织入 INotifyPropertyChanged -->
+        <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all" />
+        <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="all" />
+    </ItemGroup>
+
+</Project>
