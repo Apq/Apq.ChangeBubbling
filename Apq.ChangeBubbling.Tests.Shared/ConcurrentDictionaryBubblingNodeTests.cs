@@ -6,6 +6,7 @@ namespace Apq.ChangeBubbling.Tests;
 /// <summary>
 /// ConcurrentDictionaryBubblingNode 线程安全字典节点测试
 /// </summary>
+[Collection("Sequential")]
 public class ConcurrentDictionaryBubblingNodeTests
 {
     [Fact]

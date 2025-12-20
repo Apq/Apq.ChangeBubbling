@@ -6,6 +6,7 @@ namespace Apq.ChangeBubbling.Tests;
 /// <summary>
 /// ChangeMessenger 消息中心测试
 /// </summary>
+[Collection("Sequential")]
 public class ChangeMessengerTests : IDisposable
 {
     public ChangeMessengerTests()

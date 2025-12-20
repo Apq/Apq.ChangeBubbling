@@ -6,6 +6,7 @@ namespace Apq.ChangeBubbling.Tests;
 /// <summary>
 /// ConcurrentBagBubblingNode 线程安全列表节点测试
 /// </summary>
+[Collection("Sequential")]
 public class ConcurrentBagBubblingNodeTests
 {
     [Fact]

@@ -1,6 +1,6 @@
 using System.Buffers;
-using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
 using Apq.ChangeBubbling.Abstractions;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -15,7 +15,7 @@ public sealed class BubblingChangeMessage : ValueChangedMessage<BubblingChange>
 {
     private static readonly ObjectPool<BubblingChangeMessage> Pool = new(() => new BubblingChangeMessage());
 
-    // 使用表达式树编译的委托，比反射快 10-100 倍
+    // 使用 IL Emit 生成的高性能委托设置 init-only 字段
     private static readonly Action<BubblingChangeMessage, BubblingChange>? ValueSetter;
 
     static BubblingChangeMessage()
@@ -26,12 +26,23 @@ public sealed class BubblingChangeMessage : ValueChangedMessage<BubblingChange>
 
         if (field is not null)
         {
-            // 编译表达式树：(msg, value) => msg.<Value>k__BackingField = value
-            var msgParam = Expression.Parameter(typeof(BubblingChangeMessage), "msg");
-            var valueParam = Expression.Parameter(typeof(BubblingChange), "value");
-            var fieldAccess = Expression.Field(msgParam, field);
-            var assign = Expression.Assign(fieldAccess, valueParam);
-            ValueSetter = Expression.Lambda<Action<BubblingChangeMessage, BubblingChange>>(assign, msgParam, valueParam).Compile();
+            // 使用 IL Emit 生成高性能的字段设置委托
+            // DynamicMethod 可以绕过 initonly 限制
+            var dm = new DynamicMethod(
+                "SetValue",
+                typeof(void),
+                new[] { typeof(BubblingChangeMessage), typeof(BubblingChange) },
+                typeof(BubblingChangeMessage),
+                skipVisibility: true);
+
+            var il = dm.GetILGenerator();
+            il.Emit(OpCodes.Ldarg_0);  // 加载 this
+            il.Emit(OpCodes.Ldarg_1);  // 加载 value
+            il.Emit(OpCodes.Stfld, field);  // 设置字段
+            il.Emit(OpCodes.Ret);
+
+            ValueSetter = (Action<BubblingChangeMessage, BubblingChange>)dm.CreateDelegate(
+                typeof(Action<BubblingChangeMessage, BubblingChange>));
         }
     }
 
@@ -58,11 +69,11 @@ public sealed class BubblingChangeMessage : ValueChangedMessage<BubblingChange>
     }
 
     /// <summary>
-    /// 设置消息值（通过编译的表达式树委托）。
+    /// 设置消息值（通过 IL Emit 生成的高性能委托）。
     /// </summary>
     private void SetValue(BubblingChange value)
     {
-        // 使用编译的委托设置只读属性的后备字段
+        // 使用编译的委托设置只读属性的后备字段，性能接近直接字段访问
         ValueSetter?.Invoke(this, value);
     }
 }

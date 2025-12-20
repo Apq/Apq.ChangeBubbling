@@ -6,6 +6,7 @@ namespace Apq.ChangeBubbling.Tests;
 /// <summary>
 /// ChangeNodeBase 基类测试
 /// </summary>
+[Collection("Sequential")]
 public class ChangeNodeBaseTests
 {
     /// <summary>

@@ -6,6 +6,7 @@ namespace Apq.ChangeBubbling.Tests;
 /// <summary>
 /// DictionaryBubblingNode 测试
 /// </summary>
+[Collection("Sequential")]
 public class DictionaryBubblingNodeTests
 {
     [Fact]
