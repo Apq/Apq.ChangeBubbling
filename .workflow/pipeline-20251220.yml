@@ -14,29 +14,14 @@ stages:
     trigger: auto
     executor: []
     steps:
-      - step: build@dotnet
-        name: pack_nuget_6
-        displayName: 打包.net6.0
-        dotnetVersion: '6.0'
-        commands:
-          - '# input your command here'
-          - dotnet restore
-          - dotnet publish -c Release -o out
-        artifacts:
-          - name: BUILD_ARTIFACT
-            path:
-              - ./out
-        caches:
-          - ~/.nuget/packages
+      - step: execute@docker
+        name: execute_by_docker
+        displayName: 基于镜像的脚本执行
+        certificate: ''
+        image: amwpfiqvy/publish-to-nuget
+        command:
+          - '# 请在此输入您想执行的脚本'
+          - echo 'Hello Gitee!'
         notify: []
         strategy:
           retry: '0'
-      - step: publish@general_artifacts
-        name: publish_general_artifacts
-        displayName: 上传制品
-        dependArtifact: BUILD_ARTIFACT
-        artifactName: output
-        notify: []
-        strategy:
-          retry: '0'
-        dependsOn: pack_nuget_6
