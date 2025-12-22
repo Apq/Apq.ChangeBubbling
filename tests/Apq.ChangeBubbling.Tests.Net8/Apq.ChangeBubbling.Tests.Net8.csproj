@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Apq.ChangeBubbling\Apq.ChangeBubbling.csproj" />
+    <ProjectReference Include="..\..\Apq.ChangeBubbling\Apq.ChangeBubbling.csproj" />
   </ItemGroup>
 
   <!-- 引用共享测试代码 -->
