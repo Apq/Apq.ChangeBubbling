@@ -63,6 +63,50 @@ dotnet build
 dotnet test
 ```
 
+## 单元测试覆盖
+
+共 **250** 个单元测试，覆盖所有核心功能模块。
+
+### 测试通过情况
+
+| 框架 | 通过 | 失败 | 跳过 | 状态 |
+|------|------|------|------|------|
+| .NET 6.0 | 250 | 0 | 0 | ✅ 全部通过 |
+| .NET 8.0 | 250 | 0 | 0 | ✅ 全部通过 |
+| .NET 9.0 | 250 | 0 | 0 | ✅ 全部通过 |
+
+### 测试类明细
+
+| 测试类 | 测试数 | 覆盖模块 |
+|--------|--------|----------|
+| BubblingChangeTests | 7 | BubblingChange 结构体基础功能 |
+| ChangeNodeBaseTests | 12 | 节点基类、父子关系、事件冒泡、批量/合并模式 |
+| ListBubblingNodeTests | 12 | 列表节点 CRUD 操作、事件触发 |
+| DictionaryBubblingNodeTests | 11 | 字典节点 CRUD 操作、事件触发 |
+| ConcurrentBagBubblingNodeTests | 12 | 线程安全列表节点、并发操作 |
+| ConcurrentDictionaryBubblingNodeTests | 11 | 线程安全字典节点、并发操作 |
+| ChangeMessengerTests | 18 | 消息中心、Rx 流、调度环境 |
+| BubblingChangeMessageTests | 12 | 消息池化、对象复用 |
+| EventFilterTests | 35 | 属性/路径/频率过滤器、组合过滤器 |
+| DataflowTests | 10 | TPL Dataflow 管线、Rx 桥接 |
+| TreeSnapshotServiceTests | 16 | 树形快照导出/导入 |
+| MultiValueSnapshotServiceTests | 16 | 多值容器快照服务 |
+| SnapshotSerializerTests | 14 | JSON 序列化/反序列化 |
+| ChangeBubblingMetricsTests | 18 | 性能指标收集与统计 |
+| ObservableCollectionAdapterTests | 20 | 集合适配器、代理事件 |
+| NitoAsyncContextEnvironmentTests | 6 | Nito 异步上下文环境 |
+
+### 测试覆盖的核心功能
+
+- **变更冒泡机制** - 子节点变更自动冒泡到父节点
+- **批量操作** - BeginBatch/EndBatch 收集并批量触发事件
+- **事件合并** - BeginCoalesce/EndCoalesce 合并同属性多次变更
+- **线程安全** - ConcurrentBag/ConcurrentDictionary 节点并发测试
+- **事件过滤** - 属性、路径、频率、组合过滤器
+- **消息系统** - Rx 响应式流、弱引用消息、对象池
+- **快照服务** - 树形结构和多值容器的导出/导入
+- **性能指标** - 事件计数、处理时间、订阅统计
+
 ## 性能测试
 
 使用 BenchmarkDotNet 进行性能测试：
