@@ -6,11 +6,19 @@
 
 ```text
 Apq.ChangeBubbling/
-├── Apq.ChangeBubbling/              # 主库项目
-├── Apq.ChangeBubbling.Tests.Net6/   # .NET 6 测试项目
-├── Apq.ChangeBubbling.Tests.Net8/   # .NET 8 测试项目
-├── Apq.ChangeBubbling.Tests.Net9/   # .NET 9 测试项目
-└── Apq.ChangeBubbling.Tests.Shared/ # 共享测试代码
+├── Apq.ChangeBubbling/                         # 主库项目
+├── Samples/
+│   └── Apq.ChangeBubbling.Samples/             # 示例项目
+├── tests/
+│   ├── Apq.ChangeBubbling.Tests.Net6/          # .NET 6 测试项目
+│   ├── Apq.ChangeBubbling.Tests.Net8/          # .NET 8 测试项目
+│   ├── Apq.ChangeBubbling.Tests.Net9/          # .NET 9 测试项目
+│   └── Apq.ChangeBubbling.Tests.Shared/        # 共享测试代码
+└── benchmarks/
+    ├── Apq.ChangeBubbling.Benchmarks.Net6/     # .NET 6 性能测试
+    ├── Apq.ChangeBubbling.Benchmarks.Net8/     # .NET 8 性能测试
+    ├── Apq.ChangeBubbling.Benchmarks.Net9/     # .NET 9 性能测试
+    └── Apq.ChangeBubbling.Benchmarks.Shared/   # 共享性能测试代码
 ```
 
 ## 特性
@@ -54,6 +62,24 @@ child.Add(42);  // 输出: 变更: 0, 路径: Child.0
 dotnet build
 dotnet test
 ```
+
+## 性能测试
+
+使用 BenchmarkDotNet 进行性能测试：
+
+```bash
+# 运行 .NET 9 性能测试
+cd benchmarks/Apq.ChangeBubbling.Benchmarks.Net9
+dotnet run -c Release
+
+# 运行特定基准测试
+dotnet run -c Release -- --filter *NodeBenchmarks*
+```
+
+性能测试包含：
+- **BubblingChangeBenchmarks** - BubblingChange 结构体创建性能
+- **NodeBenchmarks** - ListBubblingNode 和 DictionaryBubblingNode 操作性能
+- **MessengerBenchmarks** - 消息发布和对象池性能
 
 ## 许可证
 
