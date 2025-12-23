@@ -47,6 +47,8 @@ benchmarks/
 
 ## 运行基准测试
 
+> **说明**：以下所有命令均在**项目根目录**执行，测试结果保存在测试项目目录下。
+
 ### 基本运行
 
 ```bash
@@ -54,13 +56,13 @@ benchmarks/
 # 重要：多目标框架项目必须使用 -f 指定框架
 
 # 使用 .NET 9 运行
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 
 # 使用 .NET 8 运行
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net8.0 -- --filter *
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net8.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 
 # 使用 .NET 6 运行
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net6.0 -- --filter *
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net6.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
 
 ### 多版本对比测试
@@ -69,23 +71,23 @@ BenchmarkDotNet 支持在一次运行中对比多个 .NET 版本的性能：
 
 ```bash
 # 同时测试 .NET 6、8、9 的性能对比
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --runtimes net6.0 net8.0 net9.0
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --runtimes net6.0 net8.0 net9.0 --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
 
 ### 运行特定测试
 
 ```bash
 # 运行特定测试类
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *BubblingChangeBenchmarks*
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *NodeBenchmarks*
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *MessengerBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *BubblingChangeBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *NodeBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *MessengerBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 
 # 运行特定测试方法
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *ListNode_Add*
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Publish_SingleChange*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *ListNode_Add* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Publish_SingleChange* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 
 # 组合多个过滤器
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Node* --filter *Messenger*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Node* --filter *Messenger* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
 
 > **注意**：`--` 是必须的，它将后面的参数传递给 BenchmarkDotNet 而不是 dotnet 命令。
@@ -94,28 +96,25 @@ dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9
 
 ```bash
 # 快速测试（减少迭代次数，用于验证功能是否正常）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --job short
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --job short --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 
 # 列出所有可用测试（不实际运行）
 dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --list flat
 
 # 导出为不同格式
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters markdown
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters html
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters csv
-
-# 指定输出目录
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters markdown --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters html --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters csv --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
 
 ### 高级选项
 
 ```bash
 # 内存诊断（默认已启用）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --memory
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --memory --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 
 # 显示详细信息
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --info
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --info --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
 
 ## 测试结果
