@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $ScriptDir
-$PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
+$VersionsDir = Join-Path $ProjectRoot 'versions'
 $DefaultOutputDir = Join-Path $ProjectRoot 'nupkgs'
 
 function Write-ColorText {
@@ -26,7 +26,7 @@ function Read-Confirm {
             Write-ColorText '已退出' 'Yellow'
             exit 0
         }
-        if ($key.Character -eq 'y' -or $key.Character -eq 'Y') {
+        if ($key.Character -eq 'y' -or $key.Character -eq 'Y' -or $key.VirtualKeyCode -eq 13) {
             Write-Host 'Y'
             return $true
         }
@@ -43,21 +43,31 @@ Write-ColorText "========================================" 'Cyan'
 Write-ColorText '  按 Q 随时退出' 'DarkGray'
 Write-ColorText "========================================`n" 'Cyan'
 
-if (-not (Test-Path $PropsFile)) {
-    Write-ColorText '错误: 找不到 Directory.Build.props 文件' 'Red'
-    Write-ColorText "路径: $PropsFile" 'Red'
+if (-not (Test-Path $VersionsDir)) {
+    Write-ColorText '错误: 找不到 versions 目录' 'Red'
+    Write-ColorText "路径: $VersionsDir" 'Red'
     exit 1
 }
 
-# 读取当前版本
-$fileContent = Get-Content $PropsFile -Raw -Encoding UTF8
-if ($fileContent -match '<Version>([^<]+)</Version>') {
-    $currentVersion = $Matches[1]
-    Write-ColorText "当前版本: $currentVersion" 'Yellow'
-} else {
-    Write-ColorText '错误: 无法读取当前版本号' 'Red'
+# 从 versions 目录获取版本号（与 Directory.Build.props 保持一致）
+$versionFiles = @(Get-ChildItem -Path $VersionsDir -Filter 'v*.md' -ErrorAction SilentlyContinue)
+$versions = @($versionFiles | Where-Object { $_.BaseName -match '^v(\d+)\.(\d+)\.(\d+)' } | ForEach-Object {
+    $fullVersion = $_.BaseName -replace '^v', ''
+    $baseVersion = $_.BaseName -replace '^v(\d+\.\d+\.\d+).*', '$1'
+    [PSCustomObject]@{
+        Name = $fullVersion
+        Version = [version]$baseVersion
+    }
+} | Sort-Object Version -Descending)
+
+if ($versions.Count -eq 0) {
+    Write-ColorText '错误: 无法从 versions 目录获取版本号' 'Red'
+    Write-ColorText '请确保 versions 目录中存在 v*.*.*.md 格式的版本文件' 'Red'
     exit 1
 }
+
+$currentVersion = $versions[0].Name
+Write-ColorText "当前版本: $currentVersion" 'Yellow'
 
 # 设置输出目录
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
@@ -71,7 +81,7 @@ Write-Host ''
 Write-ColorText "输出目录: $OutputDir" 'Gray'
 Write-Host ''
 
-if (-not (Read-Confirm '确认开始打包? (Y/N): ')) {
+if (-not (Read-Confirm '确认开始打包? ([Y]/N): ')) {
     Write-ColorText '已取消' 'Yellow'
     exit 0
 }
@@ -85,6 +95,17 @@ if (-not (Test-Path $OutputDir)) {
 Write-Host ''
 Write-ColorText '开始打包...' 'Cyan'
 Write-Host ''
+
+# 删除当前版本的旧包（避免 NuGet 缓存冲突）
+$oldPackages = Get-ChildItem -Path $OutputDir -Filter "Apq.ChangeBubbling*.$currentVersion.*pkg" -ErrorAction SilentlyContinue
+if ($oldPackages.Count -gt 0) {
+    Write-ColorText "清理当前版本 ($currentVersion) 的旧包..." 'Gray'
+    foreach ($pkg in $oldPackages) {
+        Remove-Item $pkg.FullName -Force
+        Write-ColorText "  已删除: $($pkg.Name)" 'DarkGray'
+    }
+    Write-Host ''
+}
 
 # 构建打包参数 - 只打包主项目
 $ProjectPath = Join-Path $ProjectRoot 'Apq.ChangeBubbling\Apq.ChangeBubbling.csproj'
