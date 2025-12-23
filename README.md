@@ -15,10 +15,7 @@ Apq.ChangeBubbling/
 │   ├── Apq.ChangeBubbling.Tests.Net9/          # .NET 9 测试项目
 │   └── Apq.ChangeBubbling.Tests.Shared/        # 共享测试代码
 └── benchmarks/
-    ├── Apq.ChangeBubbling.Benchmarks.Net6/     # .NET 6 性能测试
-    ├── Apq.ChangeBubbling.Benchmarks.Net8/     # .NET 8 性能测试
-    ├── Apq.ChangeBubbling.Benchmarks.Net9/     # .NET 9 性能测试
-    └── Apq.ChangeBubbling.Benchmarks.Shared/   # 共享性能测试代码
+    └── Apq.ChangeBubbling.Benchmarks/          # 性能测试项目（多目标框架）
 ```
 
 ## 特性
@@ -44,16 +41,19 @@ using Apq.ChangeBubbling.Nodes;
 // 创建节点树
 var root = new ListBubblingNode<string>("Root");
 var child = new ListBubblingNode<int>("Child");
+
+// 建立父子关系
 root.AttachChild(child);
 
 // 订阅变更事件
 root.NodeChanged += (sender, change) =>
 {
-    Console.WriteLine($"变更: {change.PropertyName}, 路径: {string.Join(".", change.PathSegments)}");
+    Console.WriteLine($"变更: {change.PropertyName}, 类型: {change.Kind}, 路径: {string.Join(".", change.PathSegments)}");
 };
 
 // 子节点的变更会自动冒泡到父节点
-child.Add(42);  // 输出: 变更: 0, 路径: Child.0
+child.Add(42);
+child.Add(100);
 ```
 
 ## 构建与测试
@@ -65,15 +65,15 @@ dotnet test
 
 ## 单元测试覆盖
 
-共 **250** 个单元测试，覆盖所有核心功能模块。
+共 **246** 个单元测试，覆盖所有核心功能模块。
 
 ### 测试通过情况
 
 | 框架 | 通过 | 失败 | 跳过 | 状态 |
 |------|------|------|------|------|
-| .NET 6.0 | 250 | 0 | 0 | ✅ 全部通过 |
-| .NET 8.0 | 250 | 0 | 0 | ✅ 全部通过 |
-| .NET 9.0 | 250 | 0 | 0 | ✅ 全部通过 |
+| .NET 6.0 | 246 | 0 | 0 | ✅ 全部通过 |
+| .NET 8.0 | 246 | 0 | 0 | ✅ 全部通过 |
+| .NET 9.0 | 246 | 0 | 0 | ✅ 全部通过 |
 
 ### 测试类明细
 
@@ -81,20 +81,20 @@ dotnet test
 |--------|--------|----------|
 | BubblingChangeTests | 7 | BubblingChange 结构体基础功能 |
 | ChangeNodeBaseTests | 12 | 节点基类、父子关系、事件冒泡、批量/合并模式 |
-| ListBubblingNodeTests | 12 | 列表节点 CRUD 操作、事件触发 |
-| DictionaryBubblingNodeTests | 11 | 字典节点 CRUD 操作、事件触发 |
+| ListBubblingNodeTests | 11 | 列表节点 CRUD 操作、事件触发 |
+| DictionaryBubblingNodeTests | 12 | 字典节点 CRUD 操作、事件触发 |
 | ConcurrentBagBubblingNodeTests | 12 | 线程安全列表节点、并发操作 |
-| ConcurrentDictionaryBubblingNodeTests | 11 | 线程安全字典节点、并发操作 |
-| ChangeMessengerTests | 18 | 消息中心、Rx 流、调度环境 |
-| BubblingChangeMessageTests | 12 | 消息池化、对象复用 |
-| EventFilterTests | 35 | 属性/路径/频率过滤器、组合过滤器 |
+| ConcurrentDictionaryBubblingNodeTests | 12 | 线程安全字典节点、并发操作 |
+| ChangeMessengerTests | 16 | 消息中心、Rx 流、调度环境 |
+| BubblingChangeMessageTests | 11 | 消息池化、对象复用 |
+| EventFilterTests | 36 | 属性/路径/频率过滤器、组合过滤器 |
 | DataflowTests | 10 | TPL Dataflow 管线、Rx 桥接 |
 | TreeSnapshotServiceTests | 16 | 树形快照导出/导入 |
-| MultiValueSnapshotServiceTests | 16 | 多值容器快照服务 |
-| SnapshotSerializerTests | 14 | JSON 序列化/反序列化 |
-| ChangeBubblingMetricsTests | 18 | 性能指标收集与统计 |
-| ObservableCollectionAdapterTests | 20 | 集合适配器、代理事件 |
-| NitoAsyncContextEnvironmentTests | 6 | Nito 异步上下文环境 |
+| MultiValueSnapshotServiceTests | 19 | 多值容器快照服务 |
+| SnapshotSerializerTests | 18 | JSON 序列化/反序列化 |
+| ChangeBubblingMetricsTests | 21 | 性能指标收集与统计 |
+| ObservableCollectionAdapterTests | 21 | 集合适配器、代理事件 |
+| NitoAsyncContextEnvironmentTests | 12 | Nito 异步上下文环境 |
 
 ### 测试覆盖的核心功能
 
@@ -112,8 +112,8 @@ dotnet test
 使用 BenchmarkDotNet 进行性能测试：
 
 ```bash
-# 运行 .NET 9 性能测试
-cd benchmarks/Apq.ChangeBubbling.Benchmarks.Net9
+# 运行性能测试
+cd benchmarks/Apq.ChangeBubbling.Benchmarks
 dotnet run -c Release
 
 # 运行特定基准测试
