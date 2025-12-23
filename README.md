@@ -125,6 +125,45 @@ dotnet run -c Release -- --filter *NodeBenchmarks*
 - **NodeBenchmarks** - ListBubblingNode 和 DictionaryBubblingNode 操作性能
 - **MessengerBenchmarks** - 消息发布和对象池性能
 
+### 性能测试结果
+
+测试环境：Windows 11, .NET SDK 9.0.308, BenchmarkDotNet v0.14.0
+
+#### BubblingChange 创建性能
+
+| 方法 | .NET 6 | .NET 8 | .NET 9 | 内存分配 |
+|------|--------|--------|--------|----------|
+| CreateBubblingChange | 6.45 ns | 3.77 ns | **3.12 ns** | 24 B |
+| CreateBubblingChangeWithPath | 13.47 ns | 5.86 ns | **5.10 ns** | 72 B |
+
+#### Messenger 消息性能
+
+| 方法 | .NET 6 | .NET 8 | .NET 9 | 内存分配 |
+|------|--------|--------|--------|----------|
+| Publish_SingleChange | 947.7 ns | 464.6 ns | **350.4 ns** | 456 B |
+| RentAndReturn_Message | 20.6 ns | 37.7 ns | **10.6 ns** | 0 B ✨ |
+
+> ✨ 消息池租借/归还实现了零 GC 分配
+
+#### Node 节点操作性能
+
+| 方法 | .NET 6 | .NET 8 | .NET 9 | 内存分配 |
+|------|--------|--------|--------|----------|
+| ListNode_Add | 3714 ns | 2486 ns | **2124 ns** | 832 B |
+| ListNode_AddAndRemove | 1413 ns | 1085 ns | **745 ns** | 1208 B |
+| DictNode_Put | 4786 ns | 3397 ns | **3372 ns** | 888 B |
+| DictNode_PutAndRemove | 5708 ns | 4037 ns | **3306 ns** | 1648 B |
+
+#### 性能总结
+
+| 运行时 | 相对性能 |
+|--------|---------|
+| .NET 6 | 基准 (1.0x) |
+| .NET 8 | 快 1.3-2.0x |
+| .NET 9 | 快 1.5-2.7x |
+
+**推荐**：在 .NET 9 环境下运行可获得最佳性能。
+
 ## 许可证
 
 MIT License
