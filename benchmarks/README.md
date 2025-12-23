@@ -6,14 +6,12 @@
 
 ```
 benchmarks/
-├── Apq.ChangeBubbling.Benchmarks.Shared/     # 共享的基准测试类
-│   ├── BubblingChangeBenchmarks.cs           # BubblingChange 结构体性能测试
-│   ├── NodeBenchmarks.cs                     # 节点操作性能测试
-│   ├── MessengerBenchmarks.cs                # 消息系统性能测试
-│   └── Program.cs                            # 入口程序
-├── Apq.ChangeBubbling.Benchmarks.Net6/       # .NET 6 测试项目
-├── Apq.ChangeBubbling.Benchmarks.Net8/       # .NET 8 测试项目
-└── Apq.ChangeBubbling.Benchmarks.Net9/       # .NET 9 测试项目
+└── Apq.ChangeBubbling.Benchmarks/        # 多目标框架基准测试项目
+    ├── Apq.ChangeBubbling.Benchmarks.csproj  # 支持 net6.0;net8.0;net9.0
+    ├── BubblingChangeBenchmarks.cs       # BubblingChange 结构体性能测试
+    ├── NodeBenchmarks.cs                 # 节点操作性能测试
+    ├── MessengerBenchmarks.cs            # 消息系统性能测试
+    └── Program.cs                        # 入口程序
 ```
 
 ## 基准测试类说明
@@ -53,33 +51,41 @@ benchmarks/
 
 ```bash
 # 运行所有基准测试（Release 模式必须）
-# 重要：必须使用 -- --filter * 指定测试，否则会进入交互模式等待输入
-# 注意：--artifacts 参数确保结果保存在各项目目录下，避免冲突
+# 重要：多目标框架项目必须使用 -f 指定框架
 
-# .NET 6
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net6 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net6/BenchmarkDotNet.Artifacts
+# 使用 .NET 9 运行
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *
 
-# .NET 8
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net8 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net8/BenchmarkDotNet.Artifacts
+# 使用 .NET 8 运行
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net8.0 -- --filter *
 
-# .NET 9
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+# 使用 .NET 6 运行
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net6.0 -- --filter *
+```
+
+### 多版本对比测试
+
+BenchmarkDotNet 支持在一次运行中对比多个 .NET 版本的性能：
+
+```bash
+# 同时测试 .NET 6、8、9 的性能对比
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --runtimes net6.0 net8.0 net9.0
 ```
 
 ### 运行特定测试
 
 ```bash
-# 运行特定测试类（以 .NET 9 为例，其他版本替换项目名即可）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *BubblingChangeBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *NodeBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *MessengerBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+# 运行特定测试类
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *BubblingChangeBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *NodeBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *MessengerBenchmarks*
 
 # 运行特定测试方法
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *ListNode_Add* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *Publish_SingleChange* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *ListNode_Add*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Publish_SingleChange*
 
 # 组合多个过滤器
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *Node* --filter *Messenger* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Node* --filter *Messenger*
 ```
 
 > **注意**：`--` 是必须的，它将后面的参数传递给 BenchmarkDotNet 而不是 dotnet 命令。
@@ -88,117 +94,52 @@ dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 --
 
 ```bash
 # 快速测试（减少迭代次数，用于验证功能是否正常）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter *NodeBenchmarks* --job short --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-
-# 运行所有测试的快速版本
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --job short --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --job short
 
 # 列出所有可用测试（不实际运行）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --list flat
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --list flat
 
 # 导出为不同格式
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --exporters markdown --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --exporters html --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --exporters csv --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters markdown
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters html
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters csv
+
+# 指定输出目录
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
 
 ### 高级选项
 
 ```bash
-# 指定运行时
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net6 -f net6.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net6/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net8 -f net8.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net8/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -f net9.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
-
 # 内存诊断（默认已启用）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --memory --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --memory
 
 # 显示详细信息
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks.Net9 -- --filter * --info --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks.Net9/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --info
 ```
-
-## 并行运行多个测试（CPU 亲和性隔离）
-
-在多核机器上（如 64G 内存、32 核），可以同时运行多个性能测试，使用 CPU 亲和性隔离避免相互干扰。
-
-### 8 核分配方案（运行 2 个版本，需 16 核）
-
-```powershell
-# Net6，绑定到 CPU 0-7
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net6" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFF }
-
-# Net8，绑定到 CPU 8-15
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net8" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFF00 }
-```
-
-### 8 核分配方案（运行 3 个版本，需 24 核）
-
-```powershell
-# Net6，绑定到 CPU 0-7
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net6" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFF }
-
-# Net8，绑定到 CPU 8-15
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net8" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFF00 }
-
-# Net9，绑定到 CPU 16-23
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net9" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFF0000 }
-```
-
-### 16 核分配方案（运行 2 个版本，需 32 核）
-
-```powershell
-# Net6，绑定到 CPU 0-15
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net6" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFFFF }
-
-# Net8，绑定到 CPU 16-31
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net8" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFFFF0000 }
-```
-
-### 10 核分配方案（运行 3 个版本，需 30 核）
-
-```powershell
-# Net6，绑定到 CPU 0-9
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net6" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0x3FF }
-
-# Net8，绑定到 CPU 10-19
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net8" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0xFFC00 }
-
-# Net9，绑定到 CPU 20-29
-Start-Process -FilePath "dotnet" -ArgumentList "run -c Release -- --filter *" -WorkingDirectory "D:\ApqGitee\Apq.ChangeBubbling\benchmarks\Apq.ChangeBubbling.Benchmarks.Net9" -PassThru | ForEach-Object { $_.ProcessorAffinity = 0x3FF00000 }
-```
-
-### 亲和性掩码参考
-
-| 亲和性掩码 | 核心范围 |
-|-----------|---------|
-| `0xFF` | CPU 0-7 |
-| `0xFF00` | CPU 8-15 |
-| `0xFF0000` | CPU 16-23 |
-| `0xFF000000` | CPU 24-31 |
-| `0xFFFF` | CPU 0-15 |
-| `0xFFFF0000` | CPU 16-31 |
-| `0x3FF` | CPU 0-9 |
-| `0xFFC00` | CPU 10-19 |
-| `0x3FF00000` | CPU 20-29 |
 
 ## 测试结果
 
-运行完成后，结果保存在各项目目录下的 `BenchmarkDotNet.Artifacts/results/` 目录：
+运行完成后，结果默认保存在 `BenchmarkDotNet.Artifacts/results/` 目录：
 
 ```
-benchmarks/
-├── Apq.ChangeBubbling.Benchmarks.Net6/
-│   └── BenchmarkDotNet.Artifacts/results/    # .NET 6 测试结果
-├── Apq.ChangeBubbling.Benchmarks.Net8/
-│   └── BenchmarkDotNet.Artifacts/results/    # .NET 8 测试结果
-└── Apq.ChangeBubbling.Benchmarks.Net9/
-    └── BenchmarkDotNet.Artifacts/results/    # .NET 9 测试结果
-
-# 每个 results 目录包含：
-├── *-report.csv          # CSV 格式数据
-├── *-report.html         # HTML 可视化报告
-└── *-report-github.md    # GitHub Markdown 格式
+benchmarks/Apq.ChangeBubbling.Benchmarks/
+└── BenchmarkDotNet.Artifacts/
+    └── results/
+        ├── *-report.csv          # CSV 格式数据
+        ├── *-report.html         # HTML 可视化报告
+        └── *-report-github.md    # GitHub Markdown 格式
 ```
+
+### 多版本对比结果示例
+
+使用 `--runtimes` 参数后，结果会包含各版本的对比：
+
+| Method | Runtime | Mean | Allocated |
+|--------|---------|------|-----------|
+| Test   | .NET 6  | 100ns | 64 B |
+| Test   | .NET 8  | 80ns | 64 B |
+| Test   | .NET 9  | 75ns | 64 B |
 
 ### 结果解读
 
@@ -215,6 +156,7 @@ benchmarks/
 ## 注意事项
 
 1. **必须使用 Release 模式** - Debug 模式结果不准确
-2. **关闭其他程序** - 减少系统干扰
-3. **多次运行** - BenchmarkDotNet 会自动预热和多次迭代
-4. **结果对比** - 使用相同环境进行对比测试
+2. **必须指定框架** - 多目标项目需要 `-f net9.0` 等参数
+3. **关闭其他程序** - 减少系统干扰
+4. **多次运行** - BenchmarkDotNet 会自动预热和多次迭代
+5. **结果对比** - 使用 `--runtimes` 参数可在一次运行中对比多个版本
