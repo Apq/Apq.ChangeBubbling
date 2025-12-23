@@ -4,15 +4,7 @@
         <!-- 继承 Directory.Build.props 的 TargetFrameworks、LangVersion 等公共设置 -->
         <NoWarn>$(NoWarn);CS0067</NoWarn>
         <PathMap>$(MSBuildProjectDirectory)\=/_/Apq.ChangeBubbling/</PathMap>
-
-        <!-- NuGet 包 README -->
-        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
-    <!-- 将 README.md 包含到 NuGet 包中 -->
-    <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
-    </ItemGroup>
 
     <ItemGroup>
         <!-- PolySharp 用于在旧版本 .NET 上支持新语言特性 -->
