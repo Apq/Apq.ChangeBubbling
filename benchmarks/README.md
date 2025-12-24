@@ -12,6 +12,7 @@
 benchmarks/
 └── Apq.ChangeBubbling.Benchmarks/        # 多目标框架基准测试项目
     ├── Apq.ChangeBubbling.Benchmarks.csproj  # 支持 net6.0;net8.0;net9.0
+    ├── BenchmarkConfig.cs                # 自定义基准测试配置
     ├── BubblingChangeBenchmarks.cs       # BubblingChange 结构体性能测试
     ├── NodeBenchmarks.cs                 # 节点操作性能测试
     ├── MessengerBenchmarks.cs            # 消息系统性能测试
@@ -55,11 +56,12 @@ benchmarks/
 
 ### 测试配置说明
 
-本项目使用 `ShortRunJob` 快速测试配置，自动对比 .NET 6/8/9 三个版本的性能。
+本项目使用自定义 `BenchmarkConfig` 配置，自动对比 .NET 6/8/9 三个版本的性能。
 
-- **迭代次数**：3 次预热 + 3 次实际测试（默认配置为 15+15 次）
-- **预计耗时**：全部测试约 **8-10 分钟**完成
+- **迭代次数**：5 次预热 + 10 次实际测试
+- **预计耗时**：全部测试约 **6-8 分钟**完成
 - **测试覆盖**：8 个测试方法 × 3 个运行时 = 24 个测试点
+- **导出格式**：自动生成 Markdown、HTML、CSV 三种格式报告
 
 ### 基本运行
 
@@ -100,15 +102,19 @@ dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9
 
 ## 测试结果
 
-运行完成后，结果默认保存在 `BenchmarkDotNet.Artifacts/results/` 目录：
+运行完成后，结果保存在带时间戳的子目录中，便于追踪历史性能变化：
 
 ```
 benchmarks/Apq.ChangeBubbling.Benchmarks/
 └── BenchmarkDotNet.Artifacts/
-    └── results/
-        ├── *-report.csv          # CSV 格式数据
-        ├── *-report.html         # HTML 可视化报告
-        └── *-report-github.md    # GitHub Markdown 格式
+    ├── 2024-12-24_143052/              # 按时间戳保留
+    │   └── results/
+    │       ├── *-report.csv            # CSV 格式数据
+    │       ├── *-report.html           # HTML 可视化报告
+    │       └── *-report-github.md      # GitHub Markdown 格式
+    ├── 2024-12-25_091530/              # 另一次测试
+    │   └── results/
+    └── ...
 ```
 
 ### 多版本对比结果示例
@@ -138,4 +144,4 @@ benchmarks/Apq.ChangeBubbling.Benchmarks/
 1. **必须使用 Release 模式** - Debug 模式结果不准确
 2. **必须指定框架** - 多目标项目需要 `-f net9.0` 等参数
 3. **关闭其他程序** - 减少系统干扰
-4. **快速测试配置** - 使用 ShortRunJob，全部测试约 8-10 分钟完成
+4. **自定义配置** - 使用 BenchmarkConfig（5 次预热 + 10 次迭代），全部测试约 6-8 分钟完成
