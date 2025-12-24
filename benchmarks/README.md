@@ -68,22 +68,23 @@ benchmarks/
 ```bash
 # 运行所有基准测试（Release 模式必须）
 # 使用 .NET 9 作为宿主运行，自动测试 .NET 6/8/9 三个版本
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+# 结果自动保存到带时间戳的子目录
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *
 ```
 
 ### 运行特定测试
 
 ```bash
 # 运行特定测试类
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *BubblingChangeBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *NodeBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *MessengerBenchmarks* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *BubblingChangeBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *NodeBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *MessengerBenchmarks*
 
 # 运行特定测试方法
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *ListNode_Add* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *ListNode_Add*
 
 # 组合多个过滤器
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Node* --filter *Messenger* --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Node* --filter *Messenger*
 ```
 
 > **注意**：`--` 是必须的，它将后面的参数传递给 BenchmarkDotNet 而不是 dotnet 命令。
@@ -93,12 +94,9 @@ dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9
 ```bash
 # 列出所有可用测试（不实际运行）
 dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --list flat
-
-# 导出为不同格式
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters markdown --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters html --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter * --exporters csv --artifacts benchmarks/Apq.ChangeBubbling.Benchmarks/BenchmarkDotNet.Artifacts
 ```
+
+> **说明**：导出格式（Markdown、HTML、CSV）已在 `BenchmarkConfig` 中配置，无需手动指定。
 
 ## 测试结果
 
