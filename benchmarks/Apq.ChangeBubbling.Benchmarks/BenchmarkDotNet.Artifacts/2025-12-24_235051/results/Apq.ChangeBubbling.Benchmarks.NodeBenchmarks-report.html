@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Apq.ChangeBubbling.Benchmarks.NodeBenchmarks-20251224-235353</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.7462)
+Unknown processor
+.NET SDK 9.0.308
+  [Host]   : .NET 9.0.11 (9.0.1125.51716), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  .NET 6.0 : .NET 6.0.36 (6.0.3624.51421), X64 RyuJIT AVX2
+  .NET 8.0 : .NET 8.0.22 (8.0.2225.52707), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  .NET 9.0 : .NET 9.0.11 (9.0.1125.51716), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>IterationCount=10  LaunchCount=1  WarmupCount=5  
+</code></pre>
+
+<table>
+<thead><tr><th>Method         </th><th>Job</th><th>Runtime</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>ListNode_Add</td><td>.NET 6.0</td><td>.NET 6.0</td><td>2,201.6 ns</td><td>402.04 ns</td><td>210.28 ns</td><td>0.0191</td><td>0.0076</td><td>808 B</td>
+</tr><tr><td>ListNode_AddAndRemove</td><td>.NET 6.0</td><td>.NET 6.0</td><td>2,112.8 ns</td><td>180.88 ns</td><td>119.64 ns</td><td>0.0229</td><td>-</td><td>1208 B</td>
+</tr><tr><td>DictNode_Put</td><td>.NET 6.0</td><td>.NET 6.0</td><td>3,771.1 ns</td><td>2,225.80 ns</td><td>1,164.14 ns</td><td>0.0229</td><td>0.0114</td><td>888 B</td>
+</tr><tr><td>DictNode_PutAndRemove</td><td>.NET 6.0</td><td>.NET 6.0</td><td>5,702.9 ns</td><td>1,921.20 ns</td><td>1,004.83 ns</td><td>0.0458</td><td>0.0191</td><td>1648 B</td>
+</tr><tr><td>ListNode_Add</td><td>.NET 8.0</td><td>.NET 8.0</td><td>2,239.9 ns</td><td>344.63 ns</td><td>180.25 ns</td><td>0.0267</td><td>0.0153</td><td>808 B</td>
+</tr><tr><td>ListNode_AddAndRemove</td><td>.NET 8.0</td><td>.NET 8.0</td><td>938.1 ns</td><td>68.36 ns</td><td>40.68 ns</td><td>0.0229</td><td>-</td><td>1208 B</td>
+</tr><tr><td>DictNode_Put</td><td>.NET 8.0</td><td>.NET 8.0</td><td>2,835.5 ns</td><td>612.63 ns</td><td>364.57 ns</td><td>0.0343</td><td>0.0305</td><td>888 B</td>
+</tr><tr><td>DictNode_PutAndRemove</td><td>.NET 8.0</td><td>.NET 8.0</td><td>3,420.0 ns</td><td>661.31 ns</td><td>393.54 ns</td><td>0.0458</td><td>0.0229</td><td>1648 B</td>
+</tr><tr><td>ListNode_Add</td><td>.NET 9.0</td><td>.NET 9.0</td><td>2,176.3 ns</td><td>581.25 ns</td><td>345.89 ns</td><td>0.0191</td><td>0.0076</td><td>808 B</td>
+</tr><tr><td>ListNode_AddAndRemove</td><td>.NET 9.0</td><td>.NET 9.0</td><td>670.5 ns</td><td>22.13 ns</td><td>14.64 ns</td><td>0.0238</td><td>-</td><td>1208 B</td>
+</tr><tr><td>DictNode_Put</td><td>.NET 9.0</td><td>.NET 9.0</td><td>2,916.3 ns</td><td>565.34 ns</td><td>336.42 ns</td><td>0.0343</td><td>0.0305</td><td>888 B</td>
+</tr><tr><td>DictNode_PutAndRemove</td><td>.NET 9.0</td><td>.NET 9.0</td><td>3,488.2 ns</td><td>573.60 ns</td><td>341.34 ns</td><td>0.0458</td><td>0.0229</td><td>1648 B</td>
+</tr></tbody></table>
+</body>
+</html>

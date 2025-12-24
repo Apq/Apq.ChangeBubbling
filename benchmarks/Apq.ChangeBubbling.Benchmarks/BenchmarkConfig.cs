@@ -46,8 +46,12 @@ public class BenchmarkConfig : ManualConfig
         // 设置摘要样式
         WithSummaryStyle(SummaryStyle.Default.WithRatioStyle(RatioStyle.Trend));
 
-        // 设置输出目录：按时间戳保留历史结果
+        // 设置输出目录：使用绝对路径，确保结果保存到 benchmarks 项目目录下
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
-        WithArtifactsPath(Path.Combine("BenchmarkDotNet.Artifacts", timestamp));
+        var benchmarkProjectDir = Path.GetDirectoryName(typeof(BenchmarkConfig).Assembly.Location)!;
+        // 从 bin/Release/net9.0 回退到项目目录
+        var projectDir = Path.GetFullPath(Path.Combine(benchmarkProjectDir, "..", "..", ".."));
+        var artifactsPath = Path.Combine(projectDir, "BenchmarkDotNet.Artifacts", timestamp);
+        WithArtifactsPath(artifactsPath);
     }
 }

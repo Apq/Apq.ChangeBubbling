@@ -116,6 +116,8 @@ StyleCopReport.xml
 *.tmp_proj
 *_wpftmp.csproj
 *.log
+# 允许 BenchmarkDotNet 性能测试日志
+!**/BenchmarkDotNet.Artifacts/**/*.log
 *.tlog
 *.vspscc
 *.vssscc
