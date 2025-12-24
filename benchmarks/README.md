@@ -1,5 +1,9 @@
 # Apq.ChangeBubbling 性能基准测试
 
+[![Gitee](https://img.shields.io/badge/Gitee-仓库-red)](https://gitee.com/apq/Apq.ChangeBubbling)
+
+**仓库地址**：https://gitee.com/apq/Apq.ChangeBubbling
+
 本目录包含 Apq.ChangeBubbling 变更冒泡库的性能基准测试，使用 [BenchmarkDotNet](https://benchmarkdotnet.org/) 框架。
 
 ## 项目结构

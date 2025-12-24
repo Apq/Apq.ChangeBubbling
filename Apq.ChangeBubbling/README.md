@@ -1,6 +1,10 @@
 # Apq.ChangeBubbling
 
+[![Gitee](https://img.shields.io/badge/Gitee-仓库-red)](https://gitee.com/apq/Apq.ChangeBubbling)
+
 变更冒泡事件库，提供树形数据结构的变更事件自动冒泡、Rx 响应式流、弱引用消息和可插拔调度环境。
+
+**仓库地址**：https://gitee.com/apq/Apq.ChangeBubbling
 
 ## 项目结构
 
