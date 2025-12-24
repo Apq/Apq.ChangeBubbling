@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using Apq.ChangeBubbling.Abstractions;
 using Apq.ChangeBubbling.Core;
 using Apq.ChangeBubbling.Nodes;
@@ -9,7 +10,9 @@ namespace Apq.ChangeBubbling.Benchmarks;
 /// BubblingChange 结构体性能测试
 /// </summary>
 [MemoryDiagnoser]
-[SimpleJob]
+[ShortRunJob(RuntimeMoniker.Net60)]
+[ShortRunJob(RuntimeMoniker.Net80)]
+[ShortRunJob(RuntimeMoniker.Net90)]
 public class BubblingChangeBenchmarks
 {
     [Benchmark]
