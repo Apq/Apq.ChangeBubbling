@@ -132,32 +132,48 @@ dotnet run -c Release -- --filter *NodeBenchmarks*
 ### 性能测试结果
 
 测试环境：Windows 11, .NET SDK 9.0.308, BenchmarkDotNet v0.14.0
+测试配置：5 次预热 + 10 次迭代
 
 #### BubblingChange 创建性能
 
 | 方法 | .NET 6 | .NET 8 | .NET 9 | 内存分配 |
 |------|--------|--------|--------|----------|
-| CreateBubblingChange | 5.24 ns | 3.07 ns | **3.04 ns** | 24 B |
-| CreateBubblingChangeWithPath | 9.32 ns | 4.81 ns | **5.05 ns** | 72 B |
+| CreateBubblingChange | 5.56 ns | 3.22 ns | **3.27 ns** | 24 B |
+| CreateBubblingChangeWithPath | 10.04 ns | 5.36 ns | **5.09 ns** | 72 B |
 
 #### Messenger 消息性能
 
 | 方法 | .NET 6 | .NET 8 | .NET 9 | 内存分配 |
 |------|--------|--------|--------|----------|
-| Publish_SingleChange | 950.4 ns | 495.9 ns | **323.7 ns** | 456 B |
-| RentAndReturn_Message | 20.0 ns | 23.0 ns | **11.5 ns** | 0 B |
+| Publish_SingleChange | 949.0 ns | 652.3 ns | **540.1 ns** | 456 B |
+| RentAndReturn_Message | 32.1 ns | 35.8 ns | **19.4 ns** | 0 B |
 
 > 消息池租借/归还实现了零 GC 分配
+
+#### Node 节点操作性能
+
+| 方法 | .NET 6 | .NET 8 | .NET 9 | 内存分配 |
+|------|--------|--------|--------|----------|
+| ListNode_Add | 2201.6 ns | 2239.9 ns | **2176.3 ns** | 808 B |
+| ListNode_AddAndRemove | 2112.8 ns | 938.1 ns | **670.5 ns** | 1208 B |
+| DictNode_Put | 3771.1 ns | 2835.5 ns | **2916.3 ns** | 888 B |
+| DictNode_PutAndRemove | 5702.9 ns | 3420.0 ns | **3488.2 ns** | 1648 B |
 
 #### 性能总结
 
 | 运行时 | 相对性能 |
 |--------|---------|
 | .NET 6 | 基准 (1.0x) |
-| .NET 8 | 快 1.7-2.0x |
-| .NET 9 | 快 1.7-2.9x |
+| .NET 8 | 快 1.3-2.3x |
+| .NET 9 | 快 1.4-3.2x |
 
-**推荐**：在 .NET 9 环境下运行可获得最佳性能。
+**关键发现**：
+- **BubblingChange 创建**：.NET 8/9 比 .NET 6 快约 **40-50%**
+- **消息发布**：.NET 9 比 .NET 6 快约 **43%**
+- **列表节点移除**：.NET 9 比 .NET 6 快约 **3.2 倍**（性能提升最显著）
+- **消息池**：零 GC 分配，.NET 9 下仅需 19.4 ns
+
+**推荐**：在 .NET 8/9 环境下运行可获得最佳性能。
 
 ## 许可证
 
