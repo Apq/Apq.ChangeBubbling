@@ -23,7 +23,7 @@ stages:
         certificate: ''
         image: registry.cn-chengdu.aliyuncs.com/apq/dotnet_sdk:9.0_amd64
         command:
-          - 'dotnet restore Apq.ChangeBubbling/Apq.ChangeBubbling.csproj && dotnet pack Apq.ChangeBubbling/Apq.ChangeBubbling.csproj -c Release -o ./nupkgs && for pkg in ./nupkgs/*.nupkg; do dotnet nuget push "$pkg" -s https://api.nuget.org/v3/index.json -k ${NUGET_API_KEY} --skip-duplicate; done'
+          - sh buildTools/gitee-pack-push.sh
         notify: []
         strategy:
           retry: '0'
