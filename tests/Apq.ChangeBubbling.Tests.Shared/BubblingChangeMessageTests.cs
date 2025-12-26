@@ -133,7 +133,7 @@ public class BubblingChangeMessageTests
     }
 
     [Fact]
-    public void Pool_ConcurrentUsage_WorksCorrectly()
+    public async Task Pool_ConcurrentUsage_WorksCorrectly()
     {
         // Arrange
         var tasks = new List<Task>();
@@ -156,7 +156,7 @@ public class BubblingChangeMessageTests
             }));
         }
 
-        Task.WaitAll(tasks.ToArray());
+        await Task.WhenAll(tasks);
 
         // Assert
         Assert.Equal(50, counter);
