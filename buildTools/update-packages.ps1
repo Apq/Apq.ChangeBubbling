@@ -498,9 +498,10 @@ if ($perFrameworkUpgrades.Count -gt 0) {
                 $newVersion = $action.Version
 
                 foreach ($fw in $frameworks) {
-                    # 匹配带条件的 PackageReference
-                    # 格式: <PackageReference Include="PackageName" Version="x.x.x" Condition="..." />
-                    $pattern = "(<PackageReference\s+Include\s*=\s*[`"']$packageName[`"'][^>]*Version\s*=\s*[`"'])([^`"']+)([`"'][^>]*Condition\s*=\s*[`"'][^`"']*'$fw'[^`"']*[`"'])"
+                    # 匹配带条件的 ItemGroup 中的 PackageReference
+                    # 格式: <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+                    #         <PackageReference Include="PackageName" Version="x.x.x" />
+                    $pattern = "(<ItemGroup[^>]*Condition\s*=\s*[`"'][^`"']*\`$\(TargetFramework\)[^`"']*==\s*'$fw'[^`"']*[`"'][^>]*>[\s\S]*?<PackageReference\s+Include\s*=\s*[`"']$packageName[`"'][^>]*Version\s*=\s*[`"'])([^`"']+)([`"'])"
 
                     if ($content -match $pattern) {
                         $content = $content -replace $pattern, "`${1}$newVersion`${3}"
