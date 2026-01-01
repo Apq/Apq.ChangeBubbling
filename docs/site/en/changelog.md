@@ -1,11 +1,11 @@
 # Changelog
 
-This page contains the changelog for Apq.ChangeBubbling.
+## [1.0.1]
 
-## [Unreleased]
+### Improved
 
-### Added
-- Initial release
+- Added VitePress documentation site with Chinese and English support
+- Target frameworks changed to .NET 8.0 and .NET 10.0
 
 ## [1.0.0] - 2024
 
