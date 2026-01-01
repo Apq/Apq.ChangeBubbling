@@ -22,10 +22,9 @@ public class BenchmarkConfig : ManualConfig
             .WithIterationCount(10)
             .WithLaunchCount(1);
 
-        // 添加三个运行时
-        AddJob(baseJob.WithRuntime(CoreRuntime.Core60).WithId(".NET 6.0"));
+        // 添加两个 LTS 运行时
         AddJob(baseJob.WithRuntime(CoreRuntime.Core80).WithId(".NET 8.0"));
-        AddJob(baseJob.WithRuntime(CoreRuntime.Core90).WithId(".NET 9.0"));
+        AddJob(baseJob.WithRuntime(CoreRuntime.Core100).WithId(".NET 10.0"));
 
         // 添加内存诊断
         AddDiagnoser(BenchmarkDotNet.Diagnosers.MemoryDiagnoser.Default);
@@ -49,7 +48,7 @@ public class BenchmarkConfig : ManualConfig
         // 设置输出目录：使用绝对路径，确保结果保存到 benchmarks 项目目录下
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
         var benchmarkProjectDir = Path.GetDirectoryName(typeof(BenchmarkConfig).Assembly.Location)!;
-        // 从 bin/Release/net9.0 回退到项目目录
+        // 从 bin/Release/net10.0 回退到项目目录
         var projectDir = Path.GetFullPath(Path.Combine(benchmarkProjectDir, "..", "..", ".."));
         var artifactsPath = Path.Combine(projectDir, "BenchmarkDotNet.Artifacts", timestamp);
         WithArtifactsPath(artifactsPath);

@@ -11,7 +11,7 @@
 ```
 benchmarks/
 └── Apq.ChangeBubbling.Benchmarks/        # 多目标框架基准测试项目
-    ├── Apq.ChangeBubbling.Benchmarks.csproj  # 支持 net6.0;net8.0;net9.0
+    ├── Apq.ChangeBubbling.Benchmarks.csproj  # 支持 net8.0;net10.0
     ├── BenchmarkConfig.cs                # 自定义基准测试配置
     ├── BubblingChangeBenchmarks.cs       # BubblingChange 结构体性能测试
     ├── NodeBenchmarks.cs                 # 节点操作性能测试
@@ -56,35 +56,35 @@ benchmarks/
 
 ### 测试配置说明
 
-本项目使用自定义 `BenchmarkConfig` 配置，自动对比 .NET 6/8/9 三个版本的性能。
+本项目使用自定义 `BenchmarkConfig` 配置，自动对比 .NET 8/10 两个 LTS 版本的性能。
 
 - **迭代次数**：5 次预热 + 10 次实际测试
-- **预计耗时**：全部测试约 **6-8 分钟**完成
-- **测试覆盖**：8 个测试方法 × 3 个运行时 = 24 个测试点
+- **预计耗时**：全部测试约 **4-6 分钟**完成
+- **测试覆盖**：8 个测试方法 × 2 个运行时 = 16 个测试点
 - **导出格式**：自动生成 Markdown、HTML、CSV 三种格式报告
 
 ### 基本运行
 
 ```bash
 # 运行所有基准测试（Release 模式必须）
-# 使用 .NET 9 作为宿主运行，自动测试 .NET 6/8/9 三个版本
+# 使用 .NET 10 作为宿主运行，自动测试 .NET 8/10 两个版本
 # 结果自动保存到带时间戳的子目录
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --filter *
 ```
 
 ### 运行特定测试
 
 ```bash
 # 运行特定测试类
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *BubblingChangeBenchmarks*
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *NodeBenchmarks*
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *MessengerBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --filter *BubblingChangeBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --filter *NodeBenchmarks*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --filter *MessengerBenchmarks*
 
 # 运行特定测试方法
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *ListNode_Add*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --filter *ListNode_Add*
 
 # 组合多个过滤器
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --filter *Node* --filter *Messenger*
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --filter *Node* --filter *Messenger*
 ```
 
 > **注意**：`--` 是必须的，它将后面的参数传递给 BenchmarkDotNet 而不是 dotnet 命令。
@@ -93,7 +93,7 @@ dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9
 
 ```bash
 # 列出所有可用测试（不实际运行）
-dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net9.0 -- --list flat
+dotnet run -c Release --project benchmarks/Apq.ChangeBubbling.Benchmarks -f net10.0 -- --list flat
 ```
 
 > **说明**：导出格式（Markdown、HTML、CSV）已在 `BenchmarkConfig` 中配置，无需手动指定。
@@ -121,9 +121,8 @@ benchmarks/Apq.ChangeBubbling.Benchmarks/
 
 | Method | Runtime | Mean | Allocated |
 |--------|---------|------|-----------|
-| Test   | .NET 6  | 100ns | 64 B |
 | Test   | .NET 8  | 80ns | 64 B |
-| Test   | .NET 9  | 75ns | 64 B |
+| Test   | .NET 10 | 70ns | 64 B |
 
 ### 结果解读
 
@@ -140,6 +139,6 @@ benchmarks/Apq.ChangeBubbling.Benchmarks/
 ## 注意事项
 
 1. **必须使用 Release 模式** - Debug 模式结果不准确
-2. **必须指定框架** - 多目标项目需要 `-f net9.0` 等参数
+2. **必须指定框架** - 多目标项目需要 `-f net10.0` 等参数
 3. **关闭其他程序** - 减少系统干扰
-4. **自定义配置** - 使用 BenchmarkConfig（5 次预热 + 10 次迭代），全部测试约 6-8 分钟完成
+4. **自定义配置** - 使用 BenchmarkConfig（5 次预热 + 10 次迭代），全部测试约 4-6 分钟完成
