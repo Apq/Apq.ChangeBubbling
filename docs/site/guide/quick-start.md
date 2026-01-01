@@ -55,8 +55,8 @@ users.Add("Alice");
 users.Add("Bob");
 
 // 设置配置
-settings["MaxRetries"] = 3;
-settings["Timeout"] = 5000;
+settings.Put("MaxRetries", 3);
+settings.Put("Timeout", 5000);
 ```
 
 输出：

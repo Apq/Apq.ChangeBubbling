@@ -53,14 +53,34 @@ const zhSidebar = {
       text: '自动生成 API (net10.0)',
       collapsed: true,
       items: [
-        { text: 'Apq.ChangeBubbling', link: '/api/net10.0/changebubbling/' }
+        { text: 'Apq.ChangeBubbling.Abstractions', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Abstractions' },
+        { text: 'Apq.ChangeBubbling.Collections', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Collections' },
+        { text: 'Apq.ChangeBubbling.Core', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Core' },
+        { text: 'Apq.ChangeBubbling.Messaging', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Messaging' },
+        { text: 'Apq.ChangeBubbling.Nodes', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Nodes' },
+        { text: 'Apq.ChangeBubbling.Nodes.Concurrent', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Nodes.Concurrent' },
+        { text: 'Apq.ChangeBubbling.Snapshot', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Snapshot' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Dataflow', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Dataflow' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.EventFiltering', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.EventFiltering' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Performance', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Performance' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Nito', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Nito' }
       ]
     },
     {
       text: '自动生成 API (net8.0)',
       collapsed: true,
       items: [
-        { text: 'Apq.ChangeBubbling', link: '/api/net8.0/changebubbling/' }
+        { text: 'Apq.ChangeBubbling.Abstractions', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Abstractions' },
+        { text: 'Apq.ChangeBubbling.Collections', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Collections' },
+        { text: 'Apq.ChangeBubbling.Core', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Core' },
+        { text: 'Apq.ChangeBubbling.Messaging', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Messaging' },
+        { text: 'Apq.ChangeBubbling.Nodes', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Nodes' },
+        { text: 'Apq.ChangeBubbling.Nodes.Concurrent', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Nodes.Concurrent' },
+        { text: 'Apq.ChangeBubbling.Snapshot', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Snapshot' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Dataflow', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Dataflow' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.EventFiltering', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.EventFiltering' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Performance', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Performance' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Nito', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Nito' }
       ]
     }
   ],
@@ -131,14 +151,34 @@ const enSidebar = {
       text: 'Auto-generated API (net10.0)',
       collapsed: true,
       items: [
-        { text: 'Apq.ChangeBubbling', link: '/api/net10.0/changebubbling/' }
+        { text: 'Apq.ChangeBubbling.Abstractions', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Abstractions' },
+        { text: 'Apq.ChangeBubbling.Collections', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Collections' },
+        { text: 'Apq.ChangeBubbling.Core', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Core' },
+        { text: 'Apq.ChangeBubbling.Messaging', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Messaging' },
+        { text: 'Apq.ChangeBubbling.Nodes', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Nodes' },
+        { text: 'Apq.ChangeBubbling.Nodes.Concurrent', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Nodes.Concurrent' },
+        { text: 'Apq.ChangeBubbling.Snapshot', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Snapshot' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Dataflow', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Dataflow' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.EventFiltering', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.EventFiltering' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Performance', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Performance' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Nito', link: '/api/net10.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Nito' }
       ]
     },
     {
       text: 'Auto-generated API (net8.0)',
       collapsed: true,
       items: [
-        { text: 'Apq.ChangeBubbling', link: '/api/net8.0/changebubbling/' }
+        { text: 'Apq.ChangeBubbling.Abstractions', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Abstractions' },
+        { text: 'Apq.ChangeBubbling.Collections', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Collections' },
+        { text: 'Apq.ChangeBubbling.Core', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Core' },
+        { text: 'Apq.ChangeBubbling.Messaging', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Messaging' },
+        { text: 'Apq.ChangeBubbling.Nodes', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Nodes' },
+        { text: 'Apq.ChangeBubbling.Nodes.Concurrent', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Nodes.Concurrent' },
+        { text: 'Apq.ChangeBubbling.Snapshot', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Snapshot' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Dataflow', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Dataflow' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.EventFiltering', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.EventFiltering' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Performance', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Performance' },
+        { text: 'Apq.ChangeBubbling.Infrastructure.Nito', link: '/api/net8.0/changebubbling/Apq.ChangeBubbling.Infrastructure.Nito' }
       ]
     }
   ],

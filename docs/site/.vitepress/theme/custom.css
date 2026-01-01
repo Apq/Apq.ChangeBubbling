@@ -1,5 +1,6 @@
 /* 自定义样式 */
 
+/* 品牌颜色 */
 :root {
   --vp-c-brand-1: #6366f1;
   --vp-c-brand-2: #8b5cf6;
@@ -13,7 +14,7 @@
   --vp-c-brand-3: #a78bfa;
 }
 
-/* 首页样式 */
+/* 首页标题渐变 */
 .VPHero .name {
   background: linear-gradient(120deg, var(--vp-c-brand-1) 30%, var(--vp-c-brand-2));
   -webkit-background-clip: text;
@@ -21,7 +22,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* 代码块样式 */
+/* 代码块圆角 */
 .vp-doc div[class*='language-'] {
   border-radius: 8px;
 }
@@ -37,7 +38,7 @@
   padding: 12px 16px;
 }
 
-/* 特性卡片样式 */
+/* 特性卡片悬停效果 */
 .VPFeature {
   border-radius: 12px;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -48,12 +49,12 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 侧边栏样式 */
+/* 侧边栏滚动条 */
 .VPSidebar {
   scrollbar-width: thin;
 }
 
-/* 搜索框样式 */
+/* 搜索框圆角 */
 .DocSearch-Button {
   border-radius: 8px !important;
 }
