@@ -65,6 +65,23 @@ try {
 
     # 输出目录信息
     $outputDir = Join-Path $RootDir 'docs\site\public\api-reference'
+
+    # 复制 favicon（DocFX 不支持自定义 favicon 路径）
+    $faviconSrc = Join-Path $DocfxDir 'favicon.svg'
+    $faviconDest = Join-Path $outputDir 'favicon.svg'
+    if (Test-Path $faviconSrc) {
+        Copy-Item $faviconSrc $faviconDest -Force
+        # 替换所有 HTML 文件中的 favicon.ico 引用为 favicon.svg
+        Get-ChildItem -Path $outputDir -Filter '*.html' -Recurse | ForEach-Object {
+            $content = [IO.File]::ReadAllText($_.FullName, [Text.Encoding]::UTF8)
+            $newContent = $content -replace 'href="([^"]*?)favicon\.ico"', 'href="$1favicon.svg"'
+            if ($content -ne $newContent) {
+                [IO.File]::WriteAllText($_.FullName, $newContent, [Text.Encoding]::UTF8)
+            }
+        }
+        Write-ColorText '  已更新 favicon 引用' 'Green'
+    }
+
     Write-ColorText "输出目录: $outputDir" 'Gray'
     Write-Host ''
 

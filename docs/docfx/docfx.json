@@ -32,19 +32,24 @@
     ],
     "resource": [
       {
-        "files": ["logo.svg"],
-        "src": "../site/public"
+        "files": ["logo.svg", "logo-small.svg"],
+        "src": "../site/public",
+        "dest": "images"
+      },
+      {
+        "files": ["favicon.svg"]
       }
     ],
     "output": "../site/public/api-reference",
-    "template": ["default", "modern"],
+    "template": ["default", "modern", "templates/custom"],
     "globalMetadata": {
       "_appTitle": "Apq.ChangeBubbling API",
       "_appName": "Apq.ChangeBubbling",
       "_appFooter": "Apq.ChangeBubbling - 变更冒泡事件库",
       "_enableSearch": true,
       "_disableContribution": true,
-      "_appLogoPath": "logo.svg"
+      "_appLogoPath": "images/logo-small.svg",
+      "_appFaviconPath": "favicon.svg"
     },
     "fileMetadata": {},
     "postProcessors": [],

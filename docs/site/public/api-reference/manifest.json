@@ -12,10 +12,20 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../site/public/logo-small.svg",
+      "output": {
+        "resource": {
+          "relative_path": "images/logo-small.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../site/public/logo.svg",
       "output": {
         "resource": {
-          "relative_path": "logo.svg"
+          "relative_path": "images/logo.svg"
         }
       },
       "version": ""
@@ -631,6 +641,16 @@
         },
         ".json": {
           "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.svg",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.svg"
         }
       },
       "version": ""
