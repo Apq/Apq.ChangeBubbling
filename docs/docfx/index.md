@@ -4,7 +4,7 @@
 
 ## 快速导航
 
-- [API 参考](api/index.md) - 完整的 API 文档
+- [API 参考](api/) - 完整的 API 文档
 
 ## 关于
 

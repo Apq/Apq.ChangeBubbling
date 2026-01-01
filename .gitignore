@@ -406,7 +406,3 @@ FodyWeavers.xsd
 *.sln.iml
 NuGet_Apq_Key.txt
 nul
-
-# DocFX 中间文件
-/api/
-# docs/site/public/api-reference/

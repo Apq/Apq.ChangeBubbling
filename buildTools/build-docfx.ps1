@@ -33,13 +33,14 @@ if (-not $docfxInstalled) {
 Write-ColorText '  DocFX 工具就绪' 'Green'
 Write-Host ''
 
-# 切换到项目根目录
-Push-Location $RootDir
+# 切换到 DocFX 目录
+$DocfxDir = Join-Path $RootDir 'docs\docfx'
+Push-Location $DocfxDir
 
 try {
     # 生成元数据
     Write-ColorText '生成 API 元数据...' 'Cyan'
-    docfx metadata docfx.json
+    docfx metadata
     if ($LASTEXITCODE -ne 0) {
         Write-ColorText '  元数据生成失败' 'Red'
         exit 1
@@ -54,7 +55,7 @@ try {
 
     # 构建文档站点
     Write-ColorText '构建文档站点...' 'Cyan'
-    docfx build docfx.json
+    docfx build
     if ($LASTEXITCODE -ne 0) {
         Write-ColorText '  站点构建失败' 'Red'
         exit 1

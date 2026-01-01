@@ -5,7 +5,7 @@
       "src": [
         {
           "files": ["Apq.ChangeBubbling/Apq.ChangeBubbling.csproj"],
-          "src": "."
+          "src": "../.."
         }
       ],
       "dest": "api",
@@ -32,10 +32,11 @@
     ],
     "resource": [
       {
-        "files": ["images/**"]
+        "files": ["logo.svg"],
+        "src": "../site/public"
       }
     ],
-    "output": "docs/site/public/api-reference",
+    "output": "../site/public/api-reference",
     "template": ["default", "modern"],
     "globalMetadata": {
       "_appTitle": "Apq.ChangeBubbling API",
@@ -43,7 +44,7 @@
       "_appFooter": "Apq.ChangeBubbling - 变更冒泡事件库",
       "_enableSearch": true,
       "_disableContribution": true,
-      "_appLogoPath": "images/logo.svg"
+      "_appLogoPath": "logo.svg"
     },
     "fileMetadata": {},
     "postProcessors": [],
