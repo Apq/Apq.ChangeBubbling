@@ -48,6 +48,20 @@ const zhSidebar = {
         { text: '事件过滤', link: '/api/filtering' },
         { text: '快照服务', link: '/api/snapshot' }
       ]
+    },
+    {
+      text: '自动生成 API (net10.0)',
+      collapsed: true,
+      items: [
+        { text: 'Apq.ChangeBubbling', link: '/api/net10.0/changebubbling/' }
+      ]
+    },
+    {
+      text: '自动生成 API (net8.0)',
+      collapsed: true,
+      items: [
+        { text: 'Apq.ChangeBubbling', link: '/api/net8.0/changebubbling/' }
+      ]
     }
   ],
   '/examples/': [
@@ -111,6 +125,20 @@ const enSidebar = {
         { text: 'Messaging', link: '/en/api/messaging' },
         { text: 'Filtering', link: '/en/api/filtering' },
         { text: 'Snapshot', link: '/en/api/snapshot' }
+      ]
+    },
+    {
+      text: 'Auto-generated API (net10.0)',
+      collapsed: true,
+      items: [
+        { text: 'Apq.ChangeBubbling', link: '/api/net10.0/changebubbling/' }
+      ]
+    },
+    {
+      text: 'Auto-generated API (net8.0)',
+      collapsed: true,
+      items: [
+        { text: 'Apq.ChangeBubbling', link: '/api/net8.0/changebubbling/' }
       ]
     }
   ],
