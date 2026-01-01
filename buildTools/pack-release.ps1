@@ -228,17 +228,18 @@ if ($generateDocFx) {
     }
 
     if ($docfxInstalled) {
-        Push-Location $RootDir
+        $DocfxDir = Join-Path $RootDir 'docs\docfx'
+        Push-Location $DocfxDir
         try {
             # 生成元数据
             Write-ColorText '  生成 API 元数据...' 'Gray'
-            docfx metadata docfx.json 2>&1 | Out-Null
+            docfx metadata 2>&1 | Out-Null
             if ($LASTEXITCODE -eq 0) {
                 Write-ColorText '    ✓ 元数据生成完成' 'Green'
 
                 # 构建文档站点
                 Write-ColorText '  构建文档站点...' 'Gray'
-                docfx build docfx.json 2>&1 | Out-Null
+                docfx build 2>&1 | Out-Null
                 if ($LASTEXITCODE -eq 0) {
                     Write-ColorText '    ✓ DocFX 文档生成完成' 'Green'
                     $docfxOutputDir = Join-Path $RootDir 'docs\site\public\api-reference'
