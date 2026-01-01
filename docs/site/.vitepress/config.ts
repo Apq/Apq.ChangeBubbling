@@ -282,8 +282,14 @@ export default defineConfig({
         name: 'api-reference-redirect',
         configureServer(server) {
           server.middlewares.use((req, res, next) => {
-            // 处理 /api-reference/ 路径，重定向到 index.html
-            if (req.url === '/api-reference/' || req.url === '/api-reference') {
+            // 处理 /api-reference/ 下所有以 / 结尾的路径，重定向到 index.html
+            if (req.url?.startsWith('/api-reference/') && req.url.endsWith('/')) {
+              const redirectUrl = req.url + 'index.html'
+              res.writeHead(302, { Location: redirectUrl })
+              res.end()
+              return
+            }
+            if (req.url === '/api-reference') {
               res.writeHead(302, { Location: '/api-reference/index.html' })
               res.end()
               return
@@ -294,7 +300,13 @@ export default defineConfig({
         configurePreviewServer(server) {
           server.middlewares.use((req, res, next) => {
             // 预览服务器也需要同样的处理
-            if (req.url === '/api-reference/' || req.url === '/api-reference') {
+            if (req.url?.startsWith('/api-reference/') && req.url.endsWith('/')) {
+              const redirectUrl = req.url + 'index.html'
+              res.writeHead(302, { Location: redirectUrl })
+              res.end()
+              return
+            }
+            if (req.url === '/api-reference') {
               res.writeHead(302, { Location: '/api-reference/index.html' })
               res.end()
               return
