@@ -128,8 +128,8 @@ if (-not (Read-Confirm '确认开始打包? ([Y]/N): ')) {
     exit 0
 }
 
-# 询问是否生成文档
-$generateDocs = Read-Confirm '是否重新生成 API 文档? ([Y]/N): '
+# 询问是否生成 DocFX 文档
+$generateDocFx = Read-Confirm '是否生成 DocFX API 文档? ([Y]/N): '
 
 # 清空并创建输出目录
 if (Test-Path $OutputDir) {
@@ -143,18 +143,6 @@ if (Test-Path $OutputDir) {
 Write-Host ''
 Write-ColorText '开始打包...' 'Cyan'
 Write-Host ''
-
-# 检查 DefaultDocumentation 是否安装（仅在需要生成文档时）
-if ($generateDocs) {
-    Write-ColorText '检查文档生成工具...' 'Gray'
-    $toolInstalled = dotnet tool list -g | Select-String 'defaultdocumentation'
-    if (-not $toolInstalled) {
-        Write-ColorText '  安装 DefaultDocumentation...' 'Yellow'
-        dotnet tool install -g DefaultDocumentation.Console 2>&1 | Out-Null
-    }
-    Write-ColorText '  文档生成工具就绪' 'Green'
-    Write-Host ''
-}
 
 $successCount = 0
 $failCount = 0
@@ -201,53 +189,6 @@ foreach ($project in $TargetProjects) {
             $successCount++
             $generatedPackages += "$project.$version.nupkg"
             Write-ColorText "  ✓ $project v$version" 'Green'
-
-            # 在打包成功后立即生成该项目的文档（如果用户选择生成）
-            if ($generateDocs) {
-                Write-ColorText "    生成 $project 文档..." 'Gray'
-
-                $netVersions = @('net10.0', 'net8.0')
-
-                # 使用简化的目录名
-                $outputDirName = 'changebubbling'
-
-                # 为每个 .NET 版本生成文档
-                foreach ($netVersion in $netVersions) {
-                    $dllPath = Join-Path $RootDir "$project\bin\Release\$netVersion\$project.dll"
-                    $apiDocsDir = Join-Path $RootDir "docs\site\api\$netVersion"
-                    $projOutputDir = Join-Path $apiDocsDir $outputDirName
-
-                    if (Test-Path $dllPath) {
-                        # 创建 API 文档目录
-                        if (-not (Test-Path $apiDocsDir)) {
-                            New-Item -ItemType Directory -Path $apiDocsDir -Force | Out-Null
-                        }
-
-                        # 清空并创建输出目录
-                        if (Test-Path $projOutputDir) {
-                            Remove-Item -Path "$projOutputDir\*" -Force -Recurse -ErrorAction SilentlyContinue
-                        } else {
-                            New-Item -ItemType Directory -Path $projOutputDir -Force | Out-Null
-                        }
-
-                        # 运行 DefaultDocumentation
-                        & defaultdocumentation -a $dllPath -o $projOutputDir 2>&1 | Out-Null
-                        if ($LASTEXITCODE -eq 0) {
-                            # 生成 index.md（从主命名空间文件复制）
-                            $mainMdFile = Get-ChildItem -Path $projOutputDir -Filter "$project.md" -ErrorAction SilentlyContinue | Select-Object -First 1
-                            if ($mainMdFile) {
-                                $indexPath = Join-Path $projOutputDir 'index.md'
-                                $content = [System.IO.File]::ReadAllText($mainMdFile.FullName, [System.Text.Encoding]::UTF8)
-                                $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-                                [System.IO.File]::WriteAllText($indexPath, $content, $utf8NoBom)
-                            }
-                            Write-ColorText "      ✓ $netVersion 文档" 'Green'
-                        } else {
-                            Write-ColorText "      ✗ $netVersion 文档生成失败" 'Red'
-                        }
-                    }
-                }
-            }
         } else {
             $failCount++
             Write-ColorText "  ✗ $project 打包失败" 'Red'
@@ -268,147 +209,53 @@ if ($failCount -gt 0) {
 Write-ColorText "========================================" 'Cyan'
 Write-Host ''
 
-# 生成 API 索引页（仅在用户选择生成文档时）
-if ($generateDocs) {
-    Write-ColorText '生成 API 索引页...' 'Cyan'
+# 生成 DocFX 文档（如果用户选择）
+if ($generateDocFx) {
+    Write-ColorText '生成 DocFX API 文档...' 'Cyan'
 
-    $netVersions = @('net10.0', 'net8.0')
-    $generatedDocVersions = @()
+    # 检查 DocFX 是否安装
+    $docfxInstalled = dotnet tool list -g | Select-String 'docfx'
+    if (-not $docfxInstalled) {
+        Write-ColorText '  安装 DocFX...' 'Yellow'
+        $installOutput = dotnet tool install -g docfx 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-ColorText '  ✗ DocFX 安装失败' 'Red'
+            Write-ColorText '    请手动运行: dotnet tool install -g docfx' 'Yellow'
+            Write-ColorText '    或检查网络连接后重试' 'Yellow'
+        }
+        # 重新检查是否安装成功
+        $docfxInstalled = dotnet tool list -g | Select-String 'docfx'
+    }
 
-    # 检查每个 .NET 版本是否有文档生成
-    foreach ($netVersion in $netVersions) {
-        $apiDocsDir = Join-Path $RootDir "docs\site\api\$netVersion"
-        if (Test-Path $apiDocsDir) {
-            $docDirs = Get-ChildItem -Path $apiDocsDir -Directory -ErrorAction SilentlyContinue
-            if ($docDirs.Count -gt 0) {
-                $generatedDocVersions += $netVersion
+    if ($docfxInstalled) {
+        Push-Location $RootDir
+        try {
+            # 生成元数据
+            Write-ColorText '  生成 API 元数据...' 'Gray'
+            docfx metadata docfx.json 2>&1 | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+                Write-ColorText '    ✓ 元数据生成完成' 'Green'
+
+                # 构建文档站点
+                Write-ColorText '  构建文档站点...' 'Gray'
+                docfx build docfx.json 2>&1 | Out-Null
+                if ($LASTEXITCODE -eq 0) {
+                    Write-ColorText '    ✓ DocFX 文档生成完成' 'Green'
+                    $docfxOutputDir = Join-Path $RootDir 'docs\site\public\api-reference'
+                    Write-ColorText "    输出目录: $docfxOutputDir" 'Gray'
+                } else {
+                    Write-ColorText '    ✗ DocFX 站点构建失败' 'Red'
+                }
+            } else {
+                Write-ColorText '    ✗ DocFX 元数据生成失败' 'Red'
             }
         }
+        finally {
+            Pop-Location
+        }
+    } else {
+        Write-ColorText '  跳过 DocFX 文档生成（工具未安装）' 'Yellow'
     }
-
-    # 为每个 .NET 版本生成索引页
-    foreach ($netVersion in $generatedDocVersions) {
-        $apiDocsDir = Join-Path $RootDir "docs\site\api\$netVersion"
-
-        $versionTitle = switch ($netVersion) {
-            'net8.0' { '.NET 8.0' }
-            'net10.0' { '.NET 10.0' }
-            default { $netVersion }
-        }
-
-        $indexContent = @"
-# API 参考 ($versionTitle)
-
-本节包含 Apq.ChangeBubbling 所有公开 API 的详细文档，由代码注释自动生成。
-
-> 当前文档基于 $versionTitle 版本生成。各版本 API 基本一致，仅内部实现有差异。
-
-- [Apq.ChangeBubbling](./changebubbling/) - 变更冒泡事件库
-"@
-
-        $indexPath = Join-Path $apiDocsDir 'index.md'
-        $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-        [System.IO.File]::WriteAllText($indexPath, $indexContent, $utf8NoBom)
-    }
-
-    # 生成总的 API 索引页
-    $apiRootDir = Join-Path $RootDir 'docs\site\api'
-
-    # 构建版本链接列表
-    $versionLinks = ""
-    foreach ($netVersion in $generatedDocVersions) {
-        $versionTitle = switch ($netVersion) {
-            'net8.0' { '.NET 8.0' }
-            'net10.0' { '.NET 10.0' }
-            default { $netVersion }
-        }
-        $versionLinks += "- [$versionTitle](./$netVersion/)`n"
-    }
-
-    $rootIndexContent = @"
-# API 参考
-
-本节包含 Apq.ChangeBubbling 所有公开 API 的详细文档。
-
-## 主要命名空间
-
-### Apq.ChangeBubbling.Core
-
-核心接口和基类：
-- ``IChangeNode`` - 节点接口
-- ``BubblingNodeBase`` - 节点基类
-
-### Apq.ChangeBubbling.Abstractions
-
-抽象定义：
-- ``BubblingChange`` - 变更事件结构
-- ``NodeChangeKind`` - 变更类型枚举
-
-### Apq.ChangeBubbling.Nodes
-
-节点实现：
-- ``ListBubblingNode<T>`` - 列表节点
-- ``DictionaryBubblingNode<TKey, TValue>`` - 字典节点
-
-### Apq.ChangeBubbling.Nodes.Concurrent
-
-并发节点：
-- ``ConcurrentBagBubblingNode<T>`` - 线程安全列表节点
-- ``ConcurrentDictionaryBubblingNode<TKey, TValue>`` - 线程安全字典节点
-
-### Apq.ChangeBubbling.Messaging
-
-消息系统：
-- ``ChangeMessenger`` - 消息中心
-- ``BubblingChangeMessage`` - 消息对象
-
-### Apq.ChangeBubbling.Infrastructure.EventFiltering
-
-事件过滤：
-- ``IChangeEventFilter`` - 过滤器接口
-- ``PropertyNameFilter`` - 属性名称过滤器
-- ``NodeNameFilter`` - 节点名称过滤器
-- ``ChangeKindFilter`` - 变更类型过滤器
-
-### Apq.ChangeBubbling.Snapshot
-
-快照服务：
-- ``TreeSnapshotService`` - 树快照服务
-- ``SnapshotSerializer`` - 快照序列化
-- ``NodeSnapshot`` - 节点快照
-- ``ISnapshotSerializable`` - 可序列化接口
-"@
-
-    $rootIndexPath = Join-Path $apiRootDir 'index.md'
-    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-    [System.IO.File]::WriteAllText($rootIndexPath, $rootIndexContent, $utf8NoBom)
-
-    Write-ColorText '  API 索引页生成完成' 'Green'
-
-    # 为英文版创建 API 文档的符号链接
-    Write-ColorText '创建英文版 API 符号链接...' 'Cyan'
-    $enApiDir = Join-Path $RootDir 'docs\site\en\api'
-
-    foreach ($netVersion in $generatedDocVersions) {
-        $sourcePath = Join-Path $RootDir "docs\site\api\$netVersion"
-        $targetPath = Join-Path $enApiDir $netVersion
-
-        if (-not (Test-Path $sourcePath)) {
-            continue
-        }
-
-        if (Test-Path $targetPath) {
-            Remove-Item $targetPath -Force -Recurse -ErrorAction SilentlyContinue
-        }
-
-        cmd /c mklink /J "$targetPath" "$sourcePath" 2>&1 | Out-Null
-        if ($LASTEXITCODE -eq 0) {
-            Write-ColorText "  ✓ $netVersion" 'Green'
-        } else {
-            Write-ColorText "  ✗ $netVersion 创建失败" 'Red'
-        }
-    }
-    Write-ColorText '  英文版 API 链接创建完成' 'Green'
     Write-Host ''
 }
 

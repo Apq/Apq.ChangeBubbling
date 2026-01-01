@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": ["Apq.ChangeBubbling/Apq.ChangeBubbling.csproj"],
+          "src": "."
+        }
+      ],
+      "dest": "api",
+      "properties": {
+        "TargetFramework": "net10.0"
+      },
+      "includePrivateMembers": false,
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false,
+      "noRestore": false,
+      "namespaceLayout": "flattened",
+      "memberLayout": "samePage",
+      "allowCompilationErrors": false
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": ["api/**.yml", "api/index.md"]
+      },
+      {
+        "files": ["toc.yml", "*.md"]
+      }
+    ],
+    "resource": [
+      {
+        "files": ["images/**"]
+      }
+    ],
+    "output": "docs/site/public/api-reference",
+    "template": ["default", "modern"],
+    "globalMetadata": {
+      "_appTitle": "Apq.ChangeBubbling API",
+      "_appName": "Apq.ChangeBubbling",
+      "_appFooter": "Apq.ChangeBubbling - 变更冒泡事件库",
+      "_enableSearch": true,
+      "_disableContribution": true,
+      "_appLogoPath": "images/logo.svg"
+    },
+    "fileMetadata": {},
+    "postProcessors": [],
+    "keepFileLink": false,
+    "disableGitFeatures": false
+  }
+}
