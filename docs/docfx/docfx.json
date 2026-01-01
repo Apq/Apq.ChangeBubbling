@@ -45,7 +45,7 @@
     "globalMetadata": {
       "_appTitle": "Apq.ChangeBubbling API",
       "_appName": "Apq.ChangeBubbling",
-      "_appFooter": "Apq.ChangeBubbling - 变更冒泡事件库",
+      "_appFooter": "Apq.ChangeBubbling - 变更冒泡事件库 (基于 .NET 10.0，兼容 .NET 8.0)",
       "_enableSearch": true,
       "_disableContribution": true,
       "_appLogoPath": "images/logo-small.svg",
