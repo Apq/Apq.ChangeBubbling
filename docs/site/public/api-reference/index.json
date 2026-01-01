@@ -214,6 +214,11 @@
     "title": "Namespace Apq.ChangeBubbling.Snapshot | Apq.ChangeBubbling API",
     "summary": "Namespace Apq.ChangeBubbling.Snapshot Classes MultiValueSnapshot 多值容器快照 DTO。 MultiValueSnapshotService 多值容器（List/Dictionary）与快照的互转工具。 NodeSnapshot 节点快照 DTO。 SnapshotSerializer 节点与多值容器的快照序列化/反序列化。 使用 System.Text.Json 以获得更好的性能。 TreeSnapshotService 基于 IChangeNode 的快照导出与导入服务。 Interfaces ISnapshotSerializable 约定：节点实现该接口以参与属性值的快照导出/导入。"
   },
+  "api/index.html": {
+    "href": "api/index.html",
+    "title": "API 参考 | Apq.ChangeBubbling API",
+    "summary": "API 参考 本节提供 Apq.ChangeBubbling 的完整 API 参考文档。 文档基于 .NET 10.0 生成，API 与 .NET 8.0 版本完全兼容。 命名空间 Apq.ChangeBubbling - 变更冒泡事件核心"
+  },
   "index.html": {
     "href": "index.html",
     "title": "Apq.ChangeBubbling API 参考 | Apq.ChangeBubbling API",

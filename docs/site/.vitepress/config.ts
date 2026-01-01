@@ -47,7 +47,7 @@ const zhSidebar = {
         { text: '消息系统', link: '/api/messaging' },
         { text: '事件过滤', link: '/api/filtering' },
         { text: '快照服务', link: '/api/snapshot' },
-        { text: 'DocFX API 文档 ↗', link: '/api-reference/api/index.html', target: '_blank' }
+        { text: 'DocFX API 文档', link: '/api-reference/api/index.html', target: '_blank' }
       ]
     }
   ],
@@ -112,7 +112,7 @@ const enSidebar = {
         { text: 'Messaging', link: '/en/api/messaging' },
         { text: 'Filtering', link: '/en/api/filtering' },
         { text: 'Snapshot', link: '/en/api/snapshot' },
-        { text: 'DocFX API Docs ↗', link: '/api-reference/api/index.html', target: '_blank' }
+        { text: 'DocFX API Docs', link: '/api-reference/api/index.html', target: '_blank' }
       ]
     }
   ],
