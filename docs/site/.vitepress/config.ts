@@ -47,7 +47,7 @@ const zhSidebar = {
         { text: '消息系统', link: '/api/messaging' },
         { text: '事件过滤', link: '/api/filtering' },
         { text: '快照服务', link: '/api/snapshot' },
-        { text: 'DocFX API 文档', link: '/api-reference/' }
+        { text: 'DocFX API 文档', link: '/api-reference/api/index.html', target: '_self', rel: '' }
       ]
     }
   ],
@@ -112,7 +112,7 @@ const enSidebar = {
         { text: 'Messaging', link: '/en/api/messaging' },
         { text: 'Filtering', link: '/en/api/filtering' },
         { text: 'Snapshot', link: '/en/api/snapshot' },
-        { text: 'DocFX API Docs', link: '/api-reference/' }
+        { text: 'DocFX API Docs', link: '/api-reference/api/index.html', target: '_self', rel: '' }
       ]
     }
   ],
@@ -266,5 +266,43 @@ export default defineConfig({
   // Sitemap 配置（SEO 优化）
   sitemap: {
     hostname: 'https://apq-changebubbling.gitee.io'
+  },
+
+  // Vite 配置：处理 DocFX 静态文件
+  vite: {
+    publicDir: 'public',
+    server: {
+      fs: {
+        // 允许访问项目目录外的文件
+        strict: false
+      }
+    },
+    plugins: [
+      {
+        name: 'api-reference-redirect',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            // 处理 /api-reference/ 路径，重定向到 index.html
+            if (req.url === '/api-reference/' || req.url === '/api-reference') {
+              res.writeHead(302, { Location: '/api-reference/index.html' })
+              res.end()
+              return
+            }
+            next()
+          })
+        },
+        configurePreviewServer(server) {
+          server.middlewares.use((req, res, next) => {
+            // 预览服务器也需要同样的处理
+            if (req.url === '/api-reference/' || req.url === '/api-reference') {
+              res.writeHead(302, { Location: '/api-reference/index.html' })
+              res.end()
+              return
+            }
+            next()
+          })
+        }
+      }
+    ]
   }
 })

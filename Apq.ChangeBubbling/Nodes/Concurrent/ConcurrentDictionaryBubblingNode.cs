@@ -6,7 +6,7 @@ using Apq.ChangeBubbling.Infrastructure.Performance;
 namespace Apq.ChangeBubbling.Nodes.Concurrent;
 
 /// <summary>
-/// 基于 <see cref="ConcurrentDictionary"/> 的线程安全更改事件冒泡节点。
+/// 基于 <see cref="ConcurrentDictionary{TKey, TValue}"/> 的线程安全更改事件冒泡节点。
 /// 直接使用 ConcurrentDictionary 的原子操作，手动触发变更事件。
 /// 适用于任意 <typeparamref name="TValue"/> 类型（无需实现 IChangeNode）。
 /// 所有操作都是线程安全的。

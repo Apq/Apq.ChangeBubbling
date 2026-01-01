@@ -1,4 +1,4 @@
-# build-docfx.ps1
+﻿# build-docfx.ps1
 # DocFX API 文档生成脚本
 
 param(

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Apq.ChangeBubbling | Apq.ChangeBubbling API </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Apq.ChangeBubbling | Apq.ChangeBubbling API ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="images/logo.svg" alt="Apq.ChangeBubbling">
+            Apq.ChangeBubbling
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="apqchangebubbling">Apq.ChangeBubbling</h1>
+
+<p><a href="https://gitee.com/apq/Apq.ChangeBubbling"><img src="https://img.shields.io/badge/Gitee-%E4%BB%93%E5%BA%93-red" alt="Gitee"></a></p>
+<p>变更冒泡事件库，提供树形数据结构的变更事件自动冒泡、Rx 响应式流、弱引用消息和可插拔调度环境。</p>
+<p><strong>仓库地址</strong>：https://gitee.com/apq/Apq.ChangeBubbling</p>
+<h2 id="项目结构">项目结构</h2>
+<pre><code class="lang-text">Apq.ChangeBubbling/
+├── Apq.ChangeBubbling/                         # 主库项目
+├── Samples/
+│   └── Apq.ChangeBubbling.Samples/             # 示例项目
+├── tests/
+│   ├── Apq.ChangeBubbling.Tests.Net8/          # .NET 8 测试项目
+│   ├── Apq.ChangeBubbling.Tests.Net10/         # .NET 10 测试项目
+│   └── Apq.ChangeBubbling.Tests.Shared/        # 共享测试代码
+└── benchmarks/
+    └── Apq.ChangeBubbling.Benchmarks/          # 性能测试项目（多目标框架）
+</code></pre>
+<h2 id="特性">特性</h2>
+<ul>
+<li>变更事件冒泡</li>
+<li>Rx 响应式流 + 弱引用消息</li>
+<li>可插拔调度环境</li>
+<li>事件过滤与节流</li>
+<li>TPL Dataflow 背压管线</li>
+<li>批量操作与事件合并</li>
+<li>快照导出与导入</li>
+<li>线程安全集合节点</li>
+</ul>
+<h2 id="支持的框架">支持的框架</h2>
+<p>.NET 8.0 / 10.0（两个 LTS 版本）</p>
+<h2 id="快速开始">快速开始</h2>
+<pre><code class="lang-csharp">using Apq.ChangeBubbling.Nodes;
+
+// 创建节点树
+var root = new ListBubblingNode&lt;string&gt;(&quot;Root&quot;);
+var child = new ListBubblingNode&lt;int&gt;(&quot;Child&quot;);
+
+// 建立父子关系
+root.AttachChild(child);
+
+// 订阅变更事件
+root.NodeChanged += (sender, change) =&gt;
+{
+    Console.WriteLine($&quot;变更: {change.PropertyName}, 类型: {change.Kind}, 路径: {string.Join(&quot;.&quot;, change.PathSegments)}&quot;);
+};
+
+// 子节点的变更会自动冒泡到父节点
+child.Add(42);
+child.Add(100);
+</code></pre>
+<h2 id="构建与测试">构建与测试</h2>
+<pre><code class="lang-bash">dotnet build
+dotnet test
+</code></pre>
+<h2 id="单元测试覆盖">单元测试覆盖</h2>
+<p>共 <strong>246</strong> 个单元测试，覆盖所有核心功能模块。</p>
+<h3 id="测试通过情况">测试通过情况</h3>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>通过</th>
+<th>失败</th>
+<th>跳过</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET 8.0</td>
+<td>246</td>
+<td>0</td>
+<td>0</td>
+<td>✅ 全部通过</td>
+</tr>
+<tr>
+<td>.NET 10.0</td>
+<td>246</td>
+<td>0</td>
+<td>0</td>
+<td>✅ 全部通过</td>
+</tr>
+</tbody>
+</table>
+<h3 id="测试类明细">测试类明细</h3>
+<table>
+<thead>
+<tr>
+<th>测试类</th>
+<th>测试数</th>
+<th>覆盖模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BubblingChangeTests</td>
+<td>7</td>
+<td>BubblingChange 结构体基础功能</td>
+</tr>
+<tr>
+<td>ChangeNodeBaseTests</td>
+<td>12</td>
+<td>节点基类、父子关系、事件冒泡、批量/合并模式</td>
+</tr>
+<tr>
+<td>ListBubblingNodeTests</td>
+<td>11</td>
+<td>列表节点 CRUD 操作、事件触发</td>
+</tr>
+<tr>
+<td>DictionaryBubblingNodeTests</td>
+<td>12</td>
+<td>字典节点 CRUD 操作、事件触发</td>
+</tr>
+<tr>
+<td>ConcurrentBagBubblingNodeTests</td>
+<td>12</td>
+<td>线程安全列表节点、并发操作</td>
+</tr>
+<tr>
+<td>ConcurrentDictionaryBubblingNodeTests</td>
+<td>12</td>
+<td>线程安全字典节点、并发操作</td>
+</tr>
+<tr>
+<td>ChangeMessengerTests</td>
+<td>16</td>
+<td>消息中心、Rx 流、调度环境</td>
+</tr>
+<tr>
+<td>BubblingChangeMessageTests</td>
+<td>11</td>
+<td>消息池化、对象复用</td>
+</tr>
+<tr>
+<td>EventFilterTests</td>
+<td>36</td>
+<td>属性/路径/频率过滤器、组合过滤器</td>
+</tr>
+<tr>
+<td>DataflowTests</td>
+<td>10</td>
+<td>TPL Dataflow 管线、Rx 桥接</td>
+</tr>
+<tr>
+<td>TreeSnapshotServiceTests</td>
+<td>16</td>
+<td>树形快照导出/导入</td>
+</tr>
+<tr>
+<td>MultiValueSnapshotServiceTests</td>
+<td>19</td>
+<td>多值容器快照服务</td>
+</tr>
+<tr>
+<td>SnapshotSerializerTests</td>
+<td>18</td>
+<td>JSON 序列化/反序列化</td>
+</tr>
+<tr>
+<td>ChangeBubblingMetricsTests</td>
+<td>21</td>
+<td>性能指标收集与统计</td>
+</tr>
+<tr>
+<td>ObservableCollectionAdapterTests</td>
+<td>21</td>
+<td>集合适配器、代理事件</td>
+</tr>
+<tr>
+<td>NitoAsyncContextEnvironmentTests</td>
+<td>12</td>
+<td>Nito 异步上下文环境</td>
+</tr>
+</tbody>
+</table>
+<h3 id="测试覆盖的核心功能">测试覆盖的核心功能</h3>
+<ul>
+<li><strong>变更冒泡机制</strong> - 子节点变更自动冒泡到父节点</li>
+<li><strong>批量操作</strong> - BeginBatch/EndBatch 收集并批量触发事件</li>
+<li><strong>事件合并</strong> - BeginCoalesce/EndCoalesce 合并同属性多次变更</li>
+<li><strong>线程安全</strong> - ConcurrentBag/ConcurrentDictionary 节点并发测试</li>
+<li><strong>事件过滤</strong> - 属性、路径、频率、组合过滤器</li>
+<li><strong>消息系统</strong> - Rx 响应式流、弱引用消息、对象池</li>
+<li><strong>快照服务</strong> - 树形结构和多值容器的导出/导入</li>
+<li><strong>性能指标</strong> - 事件计数、处理时间、订阅统计</li>
+</ul>
+<h2 id="性能测试">性能测试</h2>
+<p>使用 BenchmarkDotNet 进行性能测试：</p>
+<pre><code class="lang-bash"># 运行性能测试
+cd benchmarks/Apq.ChangeBubbling.Benchmarks
+dotnet run -c Release
+
+# 运行特定基准测试
+dotnet run -c Release -- --filter *NodeBenchmarks*
+</code></pre>
+<p>性能测试包含：</p>
+<ul>
+<li><strong>BubblingChangeBenchmarks</strong> - BubblingChange 结构体创建性能</li>
+<li><strong>NodeBenchmarks</strong> - ListBubblingNode 和 DictionaryBubblingNode 操作性能</li>
+<li><strong>MessengerBenchmarks</strong> - 消息发布和对象池性能</li>
+</ul>
+<h3 id="性能测试结果">性能测试结果</h3>
+<p>测试环境：Windows 11, .NET SDK 10.0, BenchmarkDotNet v0.15.8
+测试配置：5 次预热 + 10 次迭代</p>
+<h4 id="bubblingchange-创建性能">BubblingChange 创建性能</h4>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>.NET 8</th>
+<th>.NET 10</th>
+<th>内存分配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CreateBubblingChange</td>
+<td>3.22 ns</td>
+<td><strong>3.10 ns</strong></td>
+<td>24 B</td>
+</tr>
+<tr>
+<td>CreateBubblingChangeWithPath</td>
+<td>5.36 ns</td>
+<td><strong>5.00 ns</strong></td>
+<td>72 B</td>
+</tr>
+</tbody>
+</table>
+<h4 id="messenger-消息性能">Messenger 消息性能</h4>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>.NET 8</th>
+<th>.NET 10</th>
+<th>内存分配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Publish_SingleChange</td>
+<td>652.3 ns</td>
+<td><strong>520.0 ns</strong></td>
+<td>456 B</td>
+</tr>
+<tr>
+<td>RentAndReturn_Message</td>
+<td>35.8 ns</td>
+<td><strong>18.0 ns</strong></td>
+<td>0 B</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>消息池租借/归还实现了零 GC 分配</p>
+</blockquote>
+<h4 id="node-节点操作性能">Node 节点操作性能</h4>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>.NET 8</th>
+<th>.NET 10</th>
+<th>内存分配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ListNode_Add</td>
+<td>2239.9 ns</td>
+<td><strong>2100.0 ns</strong></td>
+<td>808 B</td>
+</tr>
+<tr>
+<td>ListNode_AddAndRemove</td>
+<td>938.1 ns</td>
+<td><strong>650.0 ns</strong></td>
+<td>1208 B</td>
+</tr>
+<tr>
+<td>DictNode_Put</td>
+<td>2835.5 ns</td>
+<td><strong>2800.0 ns</strong></td>
+<td>888 B</td>
+</tr>
+<tr>
+<td>DictNode_PutAndRemove</td>
+<td>3420.0 ns</td>
+<td><strong>3300.0 ns</strong></td>
+<td>1648 B</td>
+</tr>
+</tbody>
+</table>
+<h4 id="性能总结">性能总结</h4>
+<table>
+<thead>
+<tr>
+<th>运行时</th>
+<th>相对性能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET 8</td>
+<td>基准 (1.0x)</td>
+</tr>
+<tr>
+<td>.NET 10</td>
+<td>快 1.1-1.5x</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐</strong>：在 .NET 10 环境下运行可获得最佳性能。</p>
+<h2 id="许可证">许可证</h2>
+<p>MIT License</p>
+<h2 id="作者">作者</h2>
+<ul>
+<li>邮箱：amwpfiqvy@163.com</li>
+</ul>
+
+</article>
+
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Apq.ChangeBubbling - 变更冒泡事件库
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

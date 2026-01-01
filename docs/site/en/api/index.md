@@ -2,12 +2,9 @@
 
 This section provides the complete API reference for Apq.ChangeBubbling.
 
-## Auto-generated API Docs
+## DocFX API Documentation
 
-API documentation is auto-generated from code comments:
-
-- [.NET 10.0](./net10.0/)
-- [.NET 8.0](./net8.0/)
+For detailed API documentation generated from code comments, see [DocFX API Docs](/api-reference/index.html).
 
 ## Manual API Docs
 

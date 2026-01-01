@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ChangeNodeBase | Apq.ChangeBubbling API </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ChangeNodeBase | Apq.ChangeBubbling API ">
+      
+      <meta name="description" content="提供父子管理与冒泡转译的基类。派生类可借助 Fody 自动织入属性变更。 使用弱事件订阅避免内存泄漏。线程安全。">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="Apq.ChangeBubbling">
+            Apq.ChangeBubbling
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase">
+
+
+
+  <h1 id="Apq_ChangeBubbling_Core_ChangeNodeBase" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase" class="text-break">
+Class ChangeNodeBase  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Apq.html">Apq</a>.<a class="xref" href="Apq.ChangeBubbling.html">ChangeBubbling</a>.<a class="xref" href="Apq.ChangeBubbling.Core.html">Core</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Apq.ChangeBubbling.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>提供父子管理与冒泡转译的基类。派生类可借助 Fody 自动织入属性变更。
+使用弱事件订阅避免内存泄漏。线程安全。</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class ChangeNodeBase : IChangeNode, IBubblingChangeNotifier, INotifyPropertyChanged</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ChangeNodeBase</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="Apq.ChangeBubbling.Core.IChangeNode.html">IChangeNode</a></div>
+      <div><a class="xref" href="Apq.ChangeBubbling.Abstractions.IBubblingChangeNotifier.html">IBubblingChangeNotifier</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged">INotifyPropertyChanged</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="Apq.ChangeBubbling.Nodes.Concurrent.ConcurrentBagBubblingNode-1.html">ConcurrentBagBubblingNode&lt;T&gt;</a></div>
+      <div><a class="xref" href="Apq.ChangeBubbling.Nodes.Concurrent.ConcurrentDictionaryBubblingNode-2.html">ConcurrentDictionaryBubblingNode&lt;TKey, TValue&gt;</a></div>
+      <div><a class="xref" href="Apq.ChangeBubbling.Nodes.DictionaryBubblingNode-2.html">DictionaryBubblingNode&lt;TKey, TValue&gt;</a></div>
+      <div><a class="xref" href="Apq.ChangeBubbling.Nodes.ListBubblingNode-1.html">ListBubblingNode&lt;T&gt;</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_Children_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.Children*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_Children" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.Children">
+  Children
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>子节点只读集合。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;IChangeNode&gt; Children { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="Apq.ChangeBubbling.Core.IChangeNode.html">IChangeNode</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_IsCoalescing_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.IsCoalescing*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_IsCoalescing" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.IsCoalescing">
+  IsCoalescing
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>获取当前是否处于事件合并模式（无锁快速读取）。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsCoalescing { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_IsInBatch_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.IsInBatch*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_IsInBatch" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.IsInBatch">
+  IsInBatch
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>获取当前是否处于批量操作中（无锁快速读取）。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsInBatch { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_Name_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.Name*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_Name" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.Name">
+  Name
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>节点名称，用于路径标识。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; protected init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_Parent_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.Parent*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_Parent" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.Parent">
+  Parent
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>父节点，根节点为 null。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IChangeNode? Parent { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Apq.ChangeBubbling.Core.IChangeNode.html">IChangeNode</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_AttachChild_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.AttachChild*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_AttachChild_Apq_ChangeBubbling_Core_IChangeNode_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.AttachChild(Apq.ChangeBubbling.Core.IChangeNode)">
+  AttachChild(IChangeNode)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>附加子节点并建立事件订阅与冒泡转译。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AttachChild(IChangeNode child)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>child</code> <a class="xref" href="Apq.ChangeBubbling.Core.IChangeNode.html">IChangeNode</a></dt>
+    <dd><p>子节点。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_BeginBatch_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.BeginBatch*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_BeginBatch" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.BeginBatch">
+  BeginBatch()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>开始批量操作。在批量操作期间，变更事件会被收集而不是立即触发。
+支持嵌套调用，只有最外层的 EndBatch 才会触发事件。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void BeginBatch()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_BeginCoalesce_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.BeginCoalesce*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_BeginCoalesce" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.BeginCoalesce">
+  BeginCoalesce()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>开始事件合并模式。在此模式下，相同属性名的变更事件会被合并，
+只保留最新的值（OldValue 保留第一次的，NewValue 使用最后一次的）。
+适用于高频属性更新场景，减少下游处理压力。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void BeginCoalesce()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_DetachChild_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.DetachChild*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_DetachChild_Apq_ChangeBubbling_Core_IChangeNode_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.DetachChild(Apq.ChangeBubbling.Core.IChangeNode)">
+  DetachChild(IChangeNode)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>移除子节点并解除订阅。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void DetachChild(IChangeNode child)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>child</code> <a class="xref" href="Apq.ChangeBubbling.Core.IChangeNode.html">IChangeNode</a></dt>
+    <dd><p>子节点。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_EndBatch_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.EndBatch*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_EndBatch_System_Boolean_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.EndBatch(System.Boolean)">
+  EndBatch(bool)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>结束批量操作。如果这是最外层的批量操作，则触发所有收集的变更事件。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EndBatch(bool raiseAggregated = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>raiseAggregated</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>是否触发聚合事件（默认 true）。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_EndCoalesce_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.EndCoalesce*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_EndCoalesce" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.EndCoalesce">
+  EndCoalesce()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>结束事件合并模式，触发所有合并后的变更事件。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EndCoalesce()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_RaiseNodeChanged_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.RaiseNodeChanged*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_RaiseNodeChanged_Apq_ChangeBubbling_Abstractions_BubblingChange_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.RaiseNodeChanged(Apq.ChangeBubbling.Abstractions.BubblingChange)">
+  RaiseNodeChanged(BubblingChange)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>触发节点变更事件，并通过弱消息发布。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RaiseNodeChanged(BubblingChange change)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>change</code> <a class="xref" href="Apq.ChangeBubbling.Abstractions.BubblingChange.html">BubblingChange</a></dt>
+    <dd><p>变更上下文。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_RaiseNodeChangedBatched_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.RaiseNodeChangedBatched*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_RaiseNodeChangedBatched_Apq_ChangeBubbling_Abstractions_BubblingChange_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.RaiseNodeChangedBatched(Apq.ChangeBubbling.Abstractions.BubblingChange)">
+  RaiseNodeChangedBatched(BubblingChange)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>内部方法：在批量模式下收集变更，否则立即触发。
+派生类应使用此方法替代直接调用 RaiseNodeChanged。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RaiseNodeChangedBatched(BubblingChange change)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>change</code> <a class="xref" href="Apq.ChangeBubbling.Abstractions.BubblingChange.html">BubblingChange</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Apq_ChangeBubbling_Core_ChangeNodeBase_RaiseNodeChangedCoalesced_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.RaiseNodeChangedCoalesced*"></a>
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_RaiseNodeChangedCoalesced_Apq_ChangeBubbling_Abstractions_BubblingChange_" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.RaiseNodeChangedCoalesced(Apq.ChangeBubbling.Abstractions.BubblingChange)">
+  RaiseNodeChangedCoalesced(BubblingChange)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>触发节点变更事件，支持事件合并模式。
+在合并模式下，相同属性名的事件会被合并。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RaiseNodeChangedCoalesced(BubblingChange change)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>change</code> <a class="xref" href="Apq.ChangeBubbling.Abstractions.BubblingChange.html">BubblingChange</a></dt>
+    <dd><p>变更上下文。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_NodeChanged" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.NodeChanged">
+  NodeChanged
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;BubblingChange&gt;? NodeChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Apq.ChangeBubbling.Abstractions.BubblingChange.html">BubblingChange</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="Apq_ChangeBubbling_Core_ChangeNodeBase_PropertyChanged" data-uid="Apq.ChangeBubbling.Core.ChangeNodeBase.PropertyChanged">
+  PropertyChanged
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>由 Fody 自动织入：属性变更事件。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler? PropertyChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.propertychangedeventhandler">PropertyChangedEventHandler</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Apq.ChangeBubbling - 变更冒泡事件库
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
