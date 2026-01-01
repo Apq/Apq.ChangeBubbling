@@ -8,26 +8,81 @@ const route = useRoute()
 
 const sidebarCollapsed = ref(false)
 
+// 根据当前路径找到最佳匹配的链接
+function findBestMatchingLink(sidebar: Element, currentPath: string): { group: Element | null, link: Element | null } {
+  const allGroups = sidebar.querySelectorAll('.VPSidebarItem.level-0.collapsible')
+  const normalizedCurrentPath = currentPath.replace(/\.html$/, '').replace(/\/$/, '')
+
+  // 首先检查是否有 VitePress 自动标记的 is-active 链接
+  const activeLink = sidebar.querySelector('.VPSidebarItem a.is-active')
+  if (activeLink) {
+    // 找到包含该链接的分组
+    for (const group of allGroups) {
+      if (group.contains(activeLink)) {
+        return { group, link: activeLink }
+      }
+    }
+  }
+
+  // 如果没有 is-active，尝试根据 URL 路径匹配
+  // 找到最长匹配的链接（最具体的匹配）
+  let bestMatch: { group: Element | null, link: Element | null, matchLength: number } = { group: null, link: null, matchLength: 0 }
+
+  for (const group of allGroups) {
+    const links = group.querySelectorAll('a')
+    for (const link of links) {
+      const href = link.getAttribute('href') || ''
+      const linkPath = href.replace(/\.html$/, '').replace(/\/$/, '')
+
+      if (normalizedCurrentPath.startsWith(linkPath) && linkPath.length > bestMatch.matchLength) {
+        bestMatch = { group, link, matchLength: linkPath.length }
+      }
+    }
+  }
+
+  return { group: bestMatch.group, link: bestMatch.link }
+}
+
+// 高亮匹配的链接
+function highlightMatchingLink(sidebar: Element, currentPath: string) {
+  // 先移除所有自定义高亮
+  sidebar.querySelectorAll('.VPSidebarItem a.custom-active').forEach(el => {
+    el.classList.remove('custom-active')
+  })
+
+  const { link } = findBestMatchingLink(sidebar, currentPath)
+
+  // 如果找到匹配的链接且它没有 is-active 类，添加自定义高亮
+  if (link && !link.classList.contains('is-active')) {
+    link.classList.add('custom-active')
+  }
+}
+
 // 收起非当前页面所在的分组
 function collapseOtherGroups() {
   const sidebar = document.querySelector('.VPSidebar')
   if (!sidebar) return
 
+  const currentPath = route.path
+  const { group: matchingGroup } = findBestMatchingLink(sidebar, currentPath)
+
+  // 高亮匹配的链接
+  highlightMatchingLink(sidebar, currentPath)
+
   // 找到所有可折叠的分组
   const allGroups = sidebar.querySelectorAll('.VPSidebarItem.level-0.collapsible')
 
   allGroups.forEach((group) => {
-    // 检查当前分组是否包含活动链接（has-active 类）
-    const hasActiveLink = group.classList.contains('has-active')
     const isCollapsed = group.classList.contains('collapsed')
-
-    // 找到可点击的标题区域
     const titleEl = group.querySelector(':scope > .item > .indicator, :scope > .item > .caret')
 
-    if (hasActiveLink && isCollapsed && titleEl) {
+    // 判断当前分组是否应该展开
+    const shouldExpand = group === matchingGroup
+
+    if (shouldExpand && isCollapsed && titleEl) {
       // 当前页面所在的组需要展开，点击展开
       (titleEl as HTMLElement).click()
-    } else if (!hasActiveLink && !isCollapsed && titleEl) {
+    } else if (!shouldExpand && !isCollapsed && titleEl) {
       // 其他组需要收起，点击收起
       (titleEl as HTMLElement).click()
     }
@@ -229,5 +284,15 @@ function toggleSidebar() {
 .VPSidebar,
 .VPSidebar * {
   background-image: none !important;
+}
+
+/* 自定义高亮样式（用于自动生成的 API 文档页面） */
+.VPSidebar .VPSidebarItem a.custom-active {
+  color: var(--vp-c-brand-1) !important;
+  font-weight: 500;
+}
+
+.VPSidebar .VPSidebarItem a.custom-active .text {
+  color: var(--vp-c-brand-1) !important;
 }
 </style>

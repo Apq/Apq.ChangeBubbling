@@ -2,20 +2,6 @@
 
 本节包含 Apq.ChangeBubbling 所有公开 API 的详细文档。
 
-## 自动生成的 API 文档
-
-API 文档由代码注释自动生成，按 .NET 版本分类：
-
-- [.NET 10.0](./net10.0/)
-- [.NET 8.0](./net8.0/)
-
-## 手动编写的 API 文档
-
-- [节点类型](./nodes) - 节点接口和实现类
-- [消息系统](./messaging) - 消息发布和订阅
-- [事件过滤](./filtering) - 事件过滤器
-- [快照服务](./snapshot) - 快照导出和导入
-
 ## 主要命名空间
 
 ### Apq.ChangeBubbling.Core

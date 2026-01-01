@@ -313,26 +313,71 @@ if ($generateDocs) {
 
     # 生成总的 API 索引页
     $apiRootDir = Join-Path $RootDir 'docs\site\api'
-    $rootIndexContent = @"
-# API 参考
 
-本节包含 Apq.ChangeBubbling 所有公开 API 的详细文档，由代码注释自动生成。
-
-> 各版本 API 基本一致，仅内部实现有差异。建议使用最新版本。
-
-## 可用版本
-
-"@
-
+    # 构建版本链接列表
+    $versionLinks = ""
     foreach ($netVersion in $generatedDocVersions) {
         $versionTitle = switch ($netVersion) {
             'net8.0' { '.NET 8.0' }
             'net10.0' { '.NET 10.0' }
             default { $netVersion }
         }
-
-        $rootIndexContent += "- [$versionTitle](./$netVersion/)`n"
+        $versionLinks += "- [$versionTitle](./$netVersion/)`n"
     }
+
+    $rootIndexContent = @"
+# API 参考
+
+本节包含 Apq.ChangeBubbling 所有公开 API 的详细文档。
+
+## 主要命名空间
+
+### Apq.ChangeBubbling.Core
+
+核心接口和基类：
+- ``IChangeNode`` - 节点接口
+- ``BubblingNodeBase`` - 节点基类
+
+### Apq.ChangeBubbling.Abstractions
+
+抽象定义：
+- ``BubblingChange`` - 变更事件结构
+- ``NodeChangeKind`` - 变更类型枚举
+
+### Apq.ChangeBubbling.Nodes
+
+节点实现：
+- ``ListBubblingNode<T>`` - 列表节点
+- ``DictionaryBubblingNode<TKey, TValue>`` - 字典节点
+
+### Apq.ChangeBubbling.Nodes.Concurrent
+
+并发节点：
+- ``ConcurrentBagBubblingNode<T>`` - 线程安全列表节点
+- ``ConcurrentDictionaryBubblingNode<TKey, TValue>`` - 线程安全字典节点
+
+### Apq.ChangeBubbling.Messaging
+
+消息系统：
+- ``ChangeMessenger`` - 消息中心
+- ``BubblingChangeMessage`` - 消息对象
+
+### Apq.ChangeBubbling.Infrastructure.EventFiltering
+
+事件过滤：
+- ``IChangeEventFilter`` - 过滤器接口
+- ``PropertyNameFilter`` - 属性名称过滤器
+- ``NodeNameFilter`` - 节点名称过滤器
+- ``ChangeKindFilter`` - 变更类型过滤器
+
+### Apq.ChangeBubbling.Snapshot
+
+快照服务：
+- ``TreeSnapshotService`` - 树快照服务
+- ``SnapshotSerializer`` - 快照序列化
+- ``NodeSnapshot`` - 节点快照
+- ``ISnapshotSerializable`` - 可序列化接口
+"@
 
     $rootIndexPath = Join-Path $apiRootDir 'index.md'
     $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
