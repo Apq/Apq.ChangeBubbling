@@ -1,4 +1,4 @@
-# pack-release.ps1
+﻿# pack-release.ps1
 # NuGet 包打包脚本
 param(
     [switch]$NoBuild,

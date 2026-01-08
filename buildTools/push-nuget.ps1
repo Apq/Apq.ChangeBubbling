@@ -1,4 +1,4 @@
-# push-nuget.ps1
+﻿# push-nuget.ps1
 param(
     [string]$ApiKey,
     [string]$Source = 'https://api.nuget.org/v3/index.json',

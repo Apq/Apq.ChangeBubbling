@@ -1,4 +1,4 @@
-# set-version.ps1
+﻿# set-version.ps1
 # 更新 Directory.Build.Version.props 中的版本号
 param(
     [string]$Version
