@@ -1,4 +1,4 @@
-﻿# push-nuget.ps1
+# push-nuget.ps1
 param(
     [string]$ApiKey,
     [string]$Source = 'https://api.nuget.org/v3/index.json',
@@ -8,9 +8,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = Split-Path -Parent $ScriptDir
-$PropsFile = Join-Path $ProjectRoot 'Directory.Build.props'
-$DefaultPackageDir = Join-Path $ProjectRoot 'nupkgs'
+$RootDir = Split-Path -Parent $ScriptDir
+$VersionPropsFile = Join-Path $RootDir 'Directory.Build.Version.props'
+$DefaultPackageDir = Join-Path $RootDir 'nupkgs'
 $ApiKeyFile = Join-Path $ScriptDir 'NuGet_Apq_Key.txt'
 
 function Write-ColorText {
@@ -40,27 +40,37 @@ function Read-Confirm {
     }
 }
 
+# 从 Directory.Build.Version.props 获取版本号
+function Get-Version {
+    if (-not (Test-Path $VersionPropsFile)) {
+        return $null
+    }
+    $content = [System.IO.File]::ReadAllText($VersionPropsFile)
+    if ($content -match '<ApqChangeBubblingVersion>([^<]+)</ApqChangeBubblingVersion>') {
+        return $Matches[1]
+    }
+    return $null
+}
+
 Write-ColorText "`n========================================" 'Cyan'
 Write-ColorText '  Apq.ChangeBubbling NuGet 发布工具' 'Cyan'
 Write-ColorText "========================================" 'Cyan'
 Write-ColorText '  按 Q 随时退出' 'DarkGray'
 Write-ColorText "========================================`n" 'Cyan'
 
-if (-not (Test-Path $PropsFile)) {
-    Write-ColorText '错误: 找不到 Directory.Build.props 文件' 'Red'
-    Write-ColorText "路径: $PropsFile" 'Red'
+if (-not (Test-Path $VersionPropsFile)) {
+    Write-ColorText '错误: 找不到 Directory.Build.Version.props 文件' 'Red'
+    Write-ColorText "路径: $VersionPropsFile" 'Red'
     exit 1
 }
 
 # 读取当前版本
-$fileContent = Get-Content $PropsFile -Raw -Encoding UTF8
-if ($fileContent -match '<Version>([^<]+)</Version>') {
-    $currentVersion = $Matches[1]
-    Write-ColorText "当前版本: $currentVersion" 'Yellow'
-} else {
+$currentVersion = Get-Version
+if (-not $currentVersion) {
     Write-ColorText '错误: 无法读取当前版本号' 'Red'
     exit 1
 }
+Write-ColorText "当前版本: $currentVersion" 'Yellow'
 
 # 设置包目录
 if ([string]::IsNullOrWhiteSpace($PackageDir)) {
@@ -108,7 +118,7 @@ Write-Host ''
 if ([string]::IsNullOrWhiteSpace($ApiKey)) {
     # 从文件读取 API Key
     if (Test-Path $ApiKeyFile) {
-        $ApiKey = (Get-Content $ApiKeyFile -Raw -Encoding UTF8).Trim()
+        $ApiKey = (Get-Content $ApiKeyFile -First 1 -Encoding UTF8).Trim()
         if ([string]::IsNullOrWhiteSpace($ApiKey)) {
             Write-ColorText '错误: API Key 文件内容为空' 'Red'
             Write-ColorText "路径: $ApiKeyFile" 'Red'
@@ -131,34 +141,36 @@ if (-not $SkipConfirm) {
 }
 
 Write-Host ''
-Write-ColorText '开始发布...' 'Cyan'
+Write-ColorText '开始并行发布...' 'Cyan'
 Write-Host ''
 
 $successCount = 0
 $failCount = 0
 
-foreach ($pkg in $packages) {
-    Write-ColorText "发布: $($pkg.Name)" 'White'
+# 使用 ForEach-Object -Parallel 并行发布（线程池，无额外进程）
+$results = $packages | ForEach-Object -Parallel {
+    $pkg = $_
+    $result = & dotnet nuget push $pkg.FullName -s $using:Source -k $using:ApiKey --skip-duplicate 2>&1
+    [PSCustomObject]@{
+        ExitCode = $LASTEXITCODE
+        Output = ($result | Out-String)
+        PkgName = $pkg.Name
+    }
+} -ThrottleLimit 8
 
-    try {
-        $result = & dotnet nuget push $pkg.FullName -s $Source -k $ApiKey --skip-duplicate 2>&1
-
-        if ($LASTEXITCODE -eq 0) {
-            Write-ColorText "  成功" 'Green'
+# 处理结果
+foreach ($result in $results) {
+    if ($result.ExitCode -eq 0) {
+        Write-ColorText "  $($result.PkgName) - 成功" 'Green'
+        $successCount++
+    } else {
+        if ($result.Output -match 'already exists') {
+            Write-ColorText "  $($result.PkgName) - 跳过 (已存在)" 'Yellow'
             $successCount++
         } else {
-            $errorMsg = $result | Out-String
-            if ($errorMsg -match 'already exists') {
-                Write-ColorText "  跳过 (已存在)" 'Yellow'
-                $successCount++
-            } else {
-                Write-ColorText "  失败: $errorMsg" 'Red'
-                $failCount++
-            }
+            Write-ColorText "  $($result.PkgName) - 失败: $($result.Output)" 'Red'
+            $failCount++
         }
-    } catch {
-        Write-ColorText "  失败: $($_.Exception.Message)" 'Red'
-        $failCount++
     }
 }
 

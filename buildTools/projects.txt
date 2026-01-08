@@ -1,0 +1,6 @@
+# Apq.ChangeBubbling 项目列表
+# 用于打包发布脚本的统一项目定义
+# 每行一个项目名称，# 开头的行为注释
+
+# 核心库
+Apq.ChangeBubbling

@@ -6,7 +6,7 @@ triggers:
   push:
     tags:
       include:
-        - ^v\d+\.\d+\.\d+(-[\w.]+)?$
+        - ^publish.*
 variables:
   global:
     - NUGET_API_KEY

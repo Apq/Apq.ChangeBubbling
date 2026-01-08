@@ -1,5 +1,5 @@
-﻿# pack-release.ps1
-# 支持每个项目独立版本的打包脚本
+# pack-release.ps1
+# NuGet 包打包脚本
 param(
     [switch]$NoBuild,
     [string]$OutputDir,
@@ -9,9 +9,8 @@ param(
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RootDir = Split-Path -Parent $ScriptDir
-$PropsFile = Join-Path $RootDir 'Directory.Build.props'
+$VersionPropsFile = Join-Path $RootDir 'Directory.Build.Version.props'
 $DefaultOutputDir = Join-Path $RootDir 'nupkgs'
-$VersionsDir = Join-Path $RootDir 'versions'
 
 function Write-ColorText {
     param([string]$Text, [string]$Color = 'White')
@@ -40,58 +39,44 @@ function Read-Confirm {
     }
 }
 
-# 获取项目版本（从 versions/{ProjectName}/v*.md 目录）
-function Get-ProjectVersion {
-    param([string]$ProjectName)
-
-    $projectVersionDir = Join-Path $VersionsDir $ProjectName
-
-    # 优先使用项目独立版本目录
-    if (Test-Path $projectVersionDir) {
-        $versionFiles = @(Get-ChildItem -Path $projectVersionDir -Filter 'v*.md' -ErrorAction SilentlyContinue)
-    } else {
-        # 回退到根版本目录
-        $versionFiles = @(Get-ChildItem -Path $VersionsDir -Filter 'v*.md' -ErrorAction SilentlyContinue)
+# 从 Directory.Build.Version.props 获取版本号
+function Get-Version {
+    if (-not (Test-Path $VersionPropsFile)) {
+        return $null
     }
-
-    $versions = @($versionFiles | Where-Object { $_.BaseName -match '^v(\d+)\.(\d+)\.(\d+)' } | ForEach-Object {
-        $fullVersion = $_.BaseName -replace '^v', ''
-        $baseVersion = $_.BaseName -replace '^v(\d+\.\d+\.\d+).*', '$1'
-        [PSCustomObject]@{
-            Name = $fullVersion
-            Version = [version]$baseVersion
-        }
-    } | Sort-Object Version -Descending)
-
-    if ($versions.Count -gt 0) {
-        return $versions[0].Name
+    $content = [System.IO.File]::ReadAllText($VersionPropsFile)
+    if ($content -match '<ApqChangeBubblingVersion>([^<]+)</ApqChangeBubblingVersion>') {
+        return $Matches[1]
     }
     return $null
 }
 
 Write-ColorText "`n========================================" 'Cyan'
 Write-ColorText '  Apq.ChangeBubbling NuGet 包生成工具' 'Cyan'
-Write-ColorText '  支持独立版本管理' 'DarkCyan'
 Write-ColorText "========================================" 'Cyan'
 Write-ColorText '  按 Q 随时退出' 'DarkGray'
 Write-ColorText "========================================`n" 'Cyan'
 
-if (-not (Test-Path $PropsFile)) {
-    Write-ColorText '错误: 找不到 Directory.Build.props 文件' 'Red'
-    Write-ColorText "路径: $PropsFile" 'Red'
+if (-not (Test-Path $VersionPropsFile)) {
+    Write-ColorText '错误: 找不到 Directory.Build.Version.props 文件' 'Red'
+    Write-ColorText "路径: $VersionPropsFile" 'Red'
     exit 1
 }
 
-if (-not (Test-Path $VersionsDir)) {
-    Write-ColorText '错误: 找不到 versions 目录' 'Red'
-    Write-ColorText "路径: $VersionsDir" 'Red'
+$version = Get-Version
+if (-not $version) {
+    Write-ColorText '错误: 无法从 Directory.Build.Version.props 读取版本号' 'Red'
     exit 1
 }
 
-# 定义所有可打包的项目
-$AllProjects = @(
-    'Apq.ChangeBubbling'
-)
+# 从 projects.txt 读取项目列表
+$ProjectsFile = Join-Path $ScriptDir 'projects.txt'
+if (-not (Test-Path $ProjectsFile)) {
+    Write-ColorText '错误: 找不到 projects.txt 文件' 'Red'
+    Write-ColorText "路径: $ProjectsFile" 'Red'
+    exit 1
+}
+$AllProjects = @(Get-Content $ProjectsFile | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 
 # 如果指定了项目，则只打包指定的项目
 if ($Projects -and $Projects.Count -gt 0) {
@@ -106,17 +91,11 @@ if ([string]::IsNullOrWhiteSpace($OutputDir)) {
 }
 
 Write-Host ''
-Write-ColorText '将要打包的项目及版本:' 'Cyan'
-
-$projectVersions = @{}
+Write-ColorText "当前版本: v$version" 'Green'
+Write-Host ''
+Write-ColorText '将要打包的项目:' 'Cyan'
 foreach ($project in $TargetProjects) {
-    $version = Get-ProjectVersion -ProjectName $project
-    if ($version) {
-        $projectVersions[$project] = $version
-        Write-ColorText "  - $project @ v$version" 'White'
-    } else {
-        Write-ColorText "  - $project @ (未找到版本)" 'Yellow'
-    }
+    Write-ColorText "  - $project" 'White'
 }
 
 Write-Host ''
@@ -144,17 +123,12 @@ Write-Host ''
 Write-ColorText '开始打包...' 'Cyan'
 Write-Host ''
 
+
 $successCount = 0
 $failCount = 0
 $generatedPackages = @()
 
 foreach ($project in $TargetProjects) {
-    $version = $projectVersions[$project]
-    if (-not $version) {
-        Write-ColorText "跳过 $project (未找到版本)" 'Yellow'
-        continue
-    }
-
     # 查找项目文件
     $projectPath = Join-Path $RootDir "$project/$project.csproj"
     if (-not (Test-Path $projectPath)) {
@@ -211,51 +185,11 @@ Write-Host ''
 
 # 生成 DocFX 文档（如果用户选择）
 if ($generateDocFx) {
-    Write-ColorText '生成 DocFX API 文档...' 'Cyan'
-
-    # 检查 DocFX 是否安装
-    $docfxInstalled = dotnet tool list -g | Select-String 'docfx'
-    if (-not $docfxInstalled) {
-        Write-ColorText '  安装 DocFX...' 'Yellow'
-        $installOutput = dotnet tool install -g docfx 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            Write-ColorText '  ✗ DocFX 安装失败' 'Red'
-            Write-ColorText '    请手动运行: dotnet tool install -g docfx' 'Yellow'
-            Write-ColorText '    或检查网络连接后重试' 'Yellow'
-        }
-        # 重新检查是否安装成功
-        $docfxInstalled = dotnet tool list -g | Select-String 'docfx'
-    }
-
-    if ($docfxInstalled) {
-        $DocfxDir = Join-Path $RootDir 'docs\docfx'
-        Push-Location $DocfxDir
-        try {
-            # 生成元数据
-            Write-ColorText '  生成 API 元数据 (net10.0 + net8.0)...' 'Gray'
-            docfx metadata 2>&1 | Out-Null
-            if ($LASTEXITCODE -eq 0) {
-                Write-ColorText '    ✓ 元数据生成完成' 'Green'
-
-                # 构建文档站点
-                Write-ColorText '  构建文档站点...' 'Gray'
-                docfx build 2>&1 | Out-Null
-                if ($LASTEXITCODE -eq 0) {
-                    Write-ColorText '    ✓ DocFX 文档生成完成' 'Green'
-                    $docfxOutputDir = Join-Path $RootDir 'docs\site\public\api-reference'
-                    Write-ColorText "    输出目录: $docfxOutputDir" 'Gray'
-                } else {
-                    Write-ColorText '    ✗ DocFX 站点构建失败' 'Red'
-                }
-            } else {
-                Write-ColorText '    ✗ DocFX 元数据生成失败' 'Red'
-            }
-        }
-        finally {
-            Pop-Location
-        }
+    $docfxScript = Join-Path $ScriptDir 'build-docfx.ps1'
+    if (Test-Path $docfxScript) {
+        & $docfxScript
     } else {
-        Write-ColorText '  跳过 DocFX 文档生成（工具未安装）' 'Yellow'
+        Write-ColorText '错误: 找不到 build-docfx.ps1 脚本' 'Red'
     }
     Write-Host ''
 }
@@ -283,4 +217,4 @@ if ($symbolPackages.Count -gt 0) {
 
 Write-ColorText '下一步操作:' 'Yellow'
 Write-ColorText '  运行 push-nuget.bat 发布到 NuGet' 'Gray'
-Write-Host ''
+Write-Host
