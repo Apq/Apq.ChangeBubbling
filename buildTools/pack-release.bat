@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 >nul
-title Apq.ChangeBubbling NuGet åŒ…ç”Ÿæˆå·¥å…·
+title Apq.ChangeBubbling NuGet °üÉú³É¹¤¾ß
 
-:: è·å–è„šæœ¬æ‰€åœ¨ç›®å½•
+:: »ñÈ¡½Å±¾ËùÔÚÄ¿Â¼
 set "SCRIPT_DIR=%~dp0"
 
-:: æ£€æŸ¥æ˜¯å¦æä¾›äº†å‚æ•°
+:: ¼ì²éÊÇ·ñÌá¹©ÁË²ÎÊı
 if "%~1"=="" (
-    :: æ— å‚æ•°ï¼Œäº¤äº’å¼è¿è¡Œ
+    :: ÎŞ²ÎÊı£¬½»»¥Ê½ÔËĞĞ
     powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%pack-release.ps1"
 ) else (
-    :: æœ‰å‚æ•°ï¼Œä¼ é€’ç»™ PowerShell
+    :: ÓĞ²ÎÊı£¬´«µİ¸ø PowerShell
     if /i "%~1"=="-NoBuild" (
         powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%pack-release.ps1" -NoBuild
     ) else (

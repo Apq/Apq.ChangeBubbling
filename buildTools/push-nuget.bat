@@ -1,15 +1,15 @@
 @echo off
 chcp 65001 >nul
-title Apq.ChangeBubbling NuGet å‘å¸ƒå·¥å…·
+title Apq.ChangeBubbling NuGet ·¢²¼¹¤¾ß
 
-:: è·å–è„šæœ¬æ‰€åœ¨ç›®å½•
+:: »ñÈ¡½Å±¾ËùÔÚÄ¿Â¼
 set "SCRIPT_DIR=%~dp0"
 
-:: æ£€æŸ¥æ˜¯å¦æä¾›äº†å‚æ•°
+:: ¼ì²éÊÇ·ñÌá¹©ÁË²ÎÊı
 if "%~1"=="" (
-    :: æ— å‚æ•°ï¼Œäº¤äº’å¼è¿è¡Œ
+    :: ÎŞ²ÎÊı£¬½»»¥Ê½ÔËĞĞ
     powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%push-nuget.ps1"
 ) else (
-    :: æœ‰å‚æ•°ï¼Œä¼ é€’ç»™ PowerShell (ç¬¬ä¸€ä¸ªå‚æ•°ä¸º API Key)
+    :: ÓĞ²ÎÊı£¬´«µİ¸ø PowerShell (µÚÒ»¸ö²ÎÊıÎª API Key)
     powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%push-nuget.ps1" -ApiKey "%~1"
 )

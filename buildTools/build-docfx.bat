@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
-title Apq.ChangeBubbling DocFX æ–‡æ¡£ç”Ÿæˆ
+title Apq.ChangeBubbling DocFX ÎÄµµÉú³É
 
-:: è·å–è„šæœ¬æ‰€åœ¨ç›®å½•
+:: »ñÈ¡½Å±¾ËùÔÚÄ¿Â¼
 set "SCRIPT_DIR=%~dp0"
 
-:: æ£€æŸ¥å‚æ•°
+:: ¼ì²é²ÎÊı
 if /i "%~1"=="-Serve" (
     powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%build-docfx.ps1" -Serve
 ) else if /i "%~1"=="-MetadataOnly" (
