@@ -68,11 +68,12 @@ root.AttachChild(child);
 // 订阅变更事件
 root.NodeChanged += (sender, change) =>
 {
-    Console.WriteLine($"变更: {change.PropertyName}, 路径: {string.Join(".", change.PathSegments)}");
+    Console.WriteLine($"变更: {change.PropertyName}, 类型: {change.Kind}, 路径: {string.Join(".", change.PathSegments)}");
 };
 
 // 子节点的变更会自动冒泡到父节点
-child.Add(42);  // 输出: 变更: 0, 路径: Child.0
+child.Add(42);
+child.Add(100);
 ```
 
 ## 核心特性

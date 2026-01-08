@@ -68,11 +68,12 @@ root.AttachChild(child);
 // Subscribe to change events
 root.NodeChanged += (sender, change) =>
 {
-    Console.WriteLine($"Change: {change.PropertyName}, Path: {string.Join(".", change.PathSegments)}");
+    Console.WriteLine($"Change: {change.PropertyName}, Kind: {change.Kind}, Path: {string.Join(".", change.PathSegments)}");
 };
 
 // Child changes bubble up to parent
-child.Add(42);  // Output: Change: 0, Path: Child.0
+child.Add(42);
+child.Add(100);
 ```
 
 ## Supported Frameworks
